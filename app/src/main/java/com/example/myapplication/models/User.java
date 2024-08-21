@@ -2,13 +2,12 @@ package com.example.myapplication.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
-
 import java.util.Objects;
 
 
@@ -22,6 +21,7 @@ public class User implements Parcelable {
     private String last_name;
     private String avatar;
 
+    @NonNull
     @Override
     public String toString() {
         return "User{" +
@@ -58,7 +58,6 @@ public class User implements Parcelable {
         this.avatar = avatar;
     }
 
-
     @Ignore
     public User(String first_name, String last_name, String email, String avatar) {
         this.first_name = first_name;
@@ -66,7 +65,6 @@ public class User implements Parcelable {
         this.email = email;
         this.avatar = avatar;
     }
-
 
     public int getId() {
         return id;

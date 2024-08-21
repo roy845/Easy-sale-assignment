@@ -9,7 +9,6 @@ import androidx.paging.Pager;
 import androidx.paging.PagingConfig;
 import androidx.paging.PagingData;
 import androidx.paging.PagingLiveData;
-
 import com.example.myapplication.database.AppDatabase;
 import com.example.myapplication.models.User;
 import java.util.List;
@@ -80,23 +79,11 @@ public class UserRepository implements IUserRepository {
         return result;
     }
 
-    public LiveData<List<User>> getAllUsers()  {
-        return appDatabase.userDao().getAllUsers();
-    }
-
-    public LiveData<List<User>> searchUsers(String query)  {
-        return appDatabase.userDao().searchUsers("%" + query + "%");
-    }
-
-    public LiveData<Integer> getUserCount() {
-      return appDatabase.userDao().getUserCount();
-    }
-
 
     public LiveData<PagingData<User>> getPagedUsers() {
         return PagingLiveData.getLiveData(new Pager<>(
                 new PagingConfig(
-                        2,0,true
+                        6,0,true
                 ),
                 () -> appDatabase.userDao().getAllUsersPaging()
         ));
@@ -105,7 +92,7 @@ public class UserRepository implements IUserRepository {
     public LiveData<PagingData<User>> searchPagedUsers(String query) {
         return PagingLiveData.getLiveData(new Pager<>(
                 new PagingConfig(
-                        2,0,true
+                        6,0,true
                 ),
                 () -> appDatabase.userDao().searchUsersPaging("%" + query + "%")
         ));

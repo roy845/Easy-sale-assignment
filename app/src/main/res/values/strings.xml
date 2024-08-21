@@ -41,8 +41,12 @@
     Get started now and experience seamless user management!\n\n
     </string>
     <string name="ok">OK</string>
+    <string name="delete_btn_txt">Delete</string>
     <string name="learn_more">Learn More</string>
     <string name="lets_go">Let’s Go</string>
+    <string name="dialogImageRecyclerView">dialog Image Recycler View</string>
+    <string name="infoIconRecyclerView">info Icon Recycler View</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="unexpected_error_occured">*An unexpected error occurred</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>

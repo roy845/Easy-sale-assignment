@@ -44,6 +44,7 @@ public class AddUserActivity extends AppCompatActivity {
     private Uri selectedImageUri;
     private TextView errorMissingEmailTextView, errorInvalidEmailTextView, errorFirstNameTextView, errorLastNameTextView,
             errorImageViewTextView,generalFeedbackTextView;
+    private Dialog imageDialog;
 
 
     @Override
@@ -60,17 +61,15 @@ public class AddUserActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
 
         if (actionBar != null) {
-            // Set the default title to an empty string to clear it
+
             actionBar.setTitle("");
 
-            // Create the custom action bar view using the extracted method
             LinearLayout customActionBarView = createCustomActionBarView();
 
-            // Add the container to the ActionBar
             ActionBar.LayoutParams params = new ActionBar.LayoutParams(
                     ActionBar.LayoutParams.WRAP_CONTENT,
                     ActionBar.LayoutParams.WRAP_CONTENT,
-                    Gravity.END | Gravity.CENTER_VERTICAL // Align to right and center vertically
+                    Gravity.END | Gravity.CENTER_VERTICAL
             );
 
             actionBar.setCustomView(customActionBarView, params);
@@ -88,24 +87,34 @@ public class AddUserActivity extends AppCompatActivity {
         restoreErrorTexts(savedInstanceState);
         restoreImageView(savedInstanceState);
         restoreEditTextsTexts(savedInstanceState);
+        restoreImageDialog(savedInstanceState);
         navigateToMainActivity();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
+    private void restoreImageDialog(Bundle savedInstanceState){
+        if (savedInstanceState != null) {
+            boolean wasDialogShowing = savedInstanceState.getBoolean("isDialogShowing", false);
+            if (wasDialogShowing) {
+                createDialog();
+            }
+        }
+    }
 
     private void createDialog(){
-        Dialog dialog = new Dialog(this);
-        dialog.setContentView(R.layout.dialog_image);
-        ImageView dialogImage = dialog.findViewById(R.id.dialogImage);
+        if (imageDialog == null || !imageDialog.isShowing()) {
+            imageDialog = new Dialog(this);
+            imageDialog.setContentView(R.layout.dialog_image);
+            ImageView dialogImage = imageDialog.findViewById(R.id.dialogImage);
 
-        if(selectedImageUri!=null){
-            Glide.with(this)
-                    .load(selectedImageUri)
-                    .into(dialogImage);
+            if (selectedImageUri != null) {
+                Glide.with(this)
+                        .load(selectedImageUri)
+                        .into(dialogImage);
+            }
 
+            imageDialog.show();
         }
-
-        dialog.show();
     }
 
     private void initUploadIconClickListener() {
@@ -139,7 +148,7 @@ public class AddUserActivity extends AppCompatActivity {
 
     private void restoreErrorTexts(@Nullable Bundle savedInstanceState) {
         if (savedInstanceState != null) {
-            // Restore visibility states of error TextViews
+
             if (errorMissingEmailTextView != null) {
                 errorMissingEmailTextView.setVisibility(savedInstanceState.getInt("errorMissingEmailVisibility"));
             }
@@ -156,7 +165,7 @@ public class AddUserActivity extends AppCompatActivity {
                 errorImageViewTextView.setVisibility(savedInstanceState.getInt("errorImageViewVisibility"));
             }
 
-            // Restore the state of generalFeedbackTextView
+
             if (generalFeedbackTextView != null) {
                 generalFeedbackTextView.setVisibility(savedInstanceState.getInt("generalFeedbackVisibility"));
                 generalFeedbackTextView.setText(savedInstanceState.getString("generalFeedbackText"));
@@ -188,14 +197,14 @@ public class AddUserActivity extends AppCompatActivity {
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        // Save the visibility states of error TextViews
+
         outState.putInt("errorMissingEmailVisibility", errorMissingEmailTextView.getVisibility());
         outState.putInt("errorInvalidEmailVisibility", errorInvalidEmailTextView.getVisibility());
         outState.putInt("errorFirstNameVisibility", errorFirstNameTextView.getVisibility());
         outState.putInt("errorLastNameVisibility", errorLastNameTextView.getVisibility());
         outState.putInt("errorImageViewVisibility", errorImageViewTextView.getVisibility());
 
-        // Save the state of generalFeedbackTextView
+
         outState.putInt("generalFeedbackVisibility", generalFeedbackTextView.getVisibility());
         outState.putString("generalFeedbackText", generalFeedbackTextView.getText().toString());
 
@@ -206,6 +215,9 @@ public class AddUserActivity extends AppCompatActivity {
         if (selectedImageUri != null) {
             outState.putString("selectedImageUri", selectedImageUri.toString());
         }
+
+        outState.putBoolean("isDialogShowing", imageDialog != null && imageDialog.isShowing());
+
     }
 
     private void showEmailExistsError(String email) {
@@ -228,11 +240,9 @@ public class AddUserActivity extends AppCompatActivity {
            String lastName = lastNameEditText.getText().toString().trim();
            String email = userEmailEditText.getText().toString().trim();
 
-
-            // Reset the error flag
             AtomicBoolean hasError = new AtomicBoolean(false);
 
-            // Reset error messages visibility
+
             errorMissingEmailTextView.setVisibility(View.GONE);
             errorInvalidEmailTextView.setVisibility(View.GONE);
             errorFirstNameTextView.setVisibility(View.GONE);
@@ -240,37 +250,33 @@ public class AddUserActivity extends AppCompatActivity {
             errorImageViewTextView.setVisibility(View.GONE);
             generalFeedbackTextView.setVisibility(View.GONE);
 
-            // Validate email presence
+
             if (!ValidationUtils.validateEmail(email)) {
                 errorMissingEmailTextView.setVisibility(View.VISIBLE);
                 hasError.set(true);
             }
 
-            // Validate email format
-            if (ValidationUtils.validateEmail(email) && !ValidationUtils.isValidEmail(email)) {
+
+            if (ValidationUtils.validateEmail(email) && ValidationUtils.isValidEmail(email)) {
                 errorInvalidEmailTextView.setVisibility(View.VISIBLE);
                 hasError.set(true);
             }
 
-            // Validate first name
-            if (!ValidationUtils.validateFirstName(firstName)) {
+            if (ValidationUtils.validateFirstName(firstName)) {
                 errorFirstNameTextView.setVisibility(View.VISIBLE);
                 hasError.set(true);
             }
 
-            // Validate last name
-            if (!ValidationUtils.validateLastname(lastName)) {
+            if (ValidationUtils.validateLastname(lastName)) {
                 errorLastNameTextView.setVisibility(View.VISIBLE);
                 hasError.set(true);
             }
 
-            // Validate avatar presence
             if (!ValidationUtils.validateImageView(userAvatarImageView) && selectedImageUri == null) {
                 errorImageViewTextView.setVisibility(View.VISIBLE);
                 hasError.set(true);
             }
 
-            // If there are validation errors, return early
             if (hasError.get()) {
                 Toast.makeText(this, "Please correct the errors and try again.", Toast.LENGTH_SHORT).show();
                 return;
@@ -302,37 +308,36 @@ public class AddUserActivity extends AppCompatActivity {
     }
 
     private LinearLayout createCustomActionBarView() {
-        // Create a TextView for the title
+
         TextView textView = new TextView(this);
         textView.setText(R.string.add_new_user_title);
-        textView.setTextColor(Color.WHITE); // Set text color
-        textView.setTextSize(18); // Set text size
-        textView.setGravity(Gravity.END); // Align text to the right
+        textView.setTextColor(Color.WHITE);
+        textView.setTextSize(18);
+        textView.setGravity(Gravity.END);
 
         ImageView imageView = getImageView();
 
-        // Create a container to hold both the TextView and ImageView
         LinearLayout linearLayout = new LinearLayout(this);
         linearLayout.setOrientation(LinearLayout.HORIZONTAL);
         linearLayout.setGravity(Gravity.END | Gravity.CENTER_VERTICAL);
-        linearLayout.addView(imageView); // Add the icon first
-        linearLayout.addView(textView); // Add the title next to the icon
+        linearLayout.addView(imageView);
+        linearLayout.addView(textView);
 
         return linearLayout;
     }
 
     private @NonNull ImageView getImageView() {
         ImageView imageView = new ImageView(this);
-        imageView.setImageResource(R.drawable.baseline_people_24); // Replace with your icon resource
+        imageView.setImageResource(R.drawable.baseline_people_24);
 
-        // Set layout parameters with left margin
+
         LinearLayout.LayoutParams imageParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
-        imageParams.setMargins(16, 0, 0, 0); // Set left margin (16 pixels)
+        imageParams.setMargins(16, 0, 0, 0);
 
-        imageView.setLayoutParams(imageParams); // Apply the parameters to the ImageView
+        imageView.setLayoutParams(imageParams);
         return imageView;
     }
 
@@ -358,9 +363,7 @@ public class AddUserActivity extends AppCompatActivity {
     }
 
     private void navigateToMainActivity(){
-        cancelButton.setOnClickListener(v -> {
-           finish();
-        });
+        cancelButton.setOnClickListener(v -> finish());
     }
 
     ActivityResultLauncher<PickVisualMediaRequest> pickMedia =
@@ -369,7 +372,7 @@ public class AddUserActivity extends AppCompatActivity {
                     selectedImageUri = uri;
                     getContentResolver().takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
                     Glide.with(AddUserActivity.this)
-                            .load(uri) // Load the URI directly, not the string
+                            .load(uri)
                             .into(userAvatarImageView);
                 } else {
                     Toast.makeText(AddUserActivity.this, "No media selected", Toast.LENGTH_SHORT).show();

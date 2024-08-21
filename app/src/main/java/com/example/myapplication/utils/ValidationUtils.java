@@ -10,11 +10,11 @@ public class ValidationUtils {
     }
 
     public static boolean validateFirstName(String firstname){
-        return !firstname.isEmpty();
+        return firstname.isEmpty();
     }
 
     public static boolean validateLastname(String lastname){
-        return !lastname.isEmpty();
+        return lastname.isEmpty();
     }
 
     public static boolean validateImageView(ImageView avatarImageView){
@@ -22,6 +22,6 @@ public class ValidationUtils {
     }
 
     public static boolean isValidEmail(CharSequence email) {
-        return Patterns.EMAIL_ADDRESS.matcher(email).matches();
+        return !Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 }

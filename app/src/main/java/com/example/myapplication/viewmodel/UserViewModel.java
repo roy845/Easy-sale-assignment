@@ -3,7 +3,6 @@ package com.example.myapplication.viewmodel;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -27,10 +26,10 @@ import androidx.paging.PagingData;
 public class UserViewModel extends AndroidViewModel {
 
     private static UserViewModel instance;
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
     private final ExecutorService executorService;
-    private MutableLiveData<Boolean> errorLiveData = new MutableLiveData<>();
-    private MutableLiveData<Boolean> loadingInitialUsersLiveData = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> errorLiveData = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> loadingInitialUsersLiveData = new MutableLiveData<>();
     public LiveData<Boolean> getErrorLiveData() {
         return errorLiveData;
     }
@@ -38,7 +37,7 @@ public class UserViewModel extends AndroidViewModel {
         return loadingInitialUsersLiveData;
     }
     private static final String PREF_FETCHED_USERS = "pref_fetched_users";
-    private SharedPreferences sharedPreferences;
+    private final SharedPreferences sharedPreferences;
 
     public UserViewModel(@NonNull Application application) {
         super(application);
@@ -55,9 +54,6 @@ public class UserViewModel extends AndroidViewModel {
         return instance;
     }
 
-    /**
-     * Load users from the API. This can be called to retry loading users after a failure.
-     */
     public void retryLoadUsers() {
         fetchAndStoreUsers(1);
     }
@@ -78,18 +74,6 @@ public class UserViewModel extends AndroidViewModel {
        return userRepository.deleteUser(user);
     }
 
-//    public LiveData<List<User>> getAllUsers()  {
-//        return userRepository.getAllUsers();
-//    }
-//
-//    public LiveData<List<User>> searchUsers(String query)  {
-//        return userRepository.searchUsers(query);
-//    }
-//
-//    private LiveData<Integer> getUserCount(){
-//        return userRepository.getUserCount();
-//    }
-
     public LiveData<PagingData<User>> getPagedUsers() {
         return userRepository.getPagedUsers();
     }
@@ -108,7 +92,6 @@ public class UserViewModel extends AndroidViewModel {
             loadingInitialUsersLiveData.setValue(false);
         }
     }
-
 
     private void fetchAndStoreUsers(int pageNumber) {
         loadingInitialUsersLiveData.setValue(true);
@@ -129,7 +112,7 @@ public class UserViewModel extends AndroidViewModel {
                         } else {
                             loadingInitialUsersLiveData.setValue(false);
                             errorLiveData.setValue(false); // Notify LiveData that data is ready
-                            sharedPreferences.edit().putBoolean(PREF_FETCHED_USERS, true).apply(); // Set the flag to true
+                            sharedPreferences.edit().putBoolean(PREF_FETCHED_USERS, true).apply();
                             Toast.makeText(getApplication().getApplicationContext(), "Users fetched successfully", Toast.LENGTH_LONG).show();
                         }
                 }

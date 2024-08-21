@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -75,17 +74,16 @@ public class MainActivity extends AppCompatActivity implements OnClickUserInterf
         ActionBar actionBar = getSupportActionBar();
 
         if (actionBar != null) {
-            // Set the default title to an empty string to clear it
+
             actionBar.setTitle("");
 
-            // Create the custom action bar view using the extracted method
             LinearLayout customActionBarView = createCustomActionBarView();
 
-            // Add the container to the ActionBar
+
             ActionBar.LayoutParams params = new ActionBar.LayoutParams(
                     ActionBar.LayoutParams.WRAP_CONTENT,
                     ActionBar.LayoutParams.WRAP_CONTENT,
-                    Gravity.END | Gravity.CENTER_VERTICAL // Align to right and center vertically
+                    Gravity.END | Gravity.CENTER_VERTICAL
             );
 
             actionBar.setCustomView(customActionBarView, params);
@@ -206,7 +204,6 @@ public class MainActivity extends AppCompatActivity implements OnClickUserInterf
 
     private void observePagedUsers(){
         userViewModel.getPagedUsers().observe(this, usersList -> {
-
             userAdapter.submitData(getLifecycle(),usersList);
             handleEmptyResults();
 
@@ -214,38 +211,36 @@ public class MainActivity extends AppCompatActivity implements OnClickUserInterf
     }
 
     private LinearLayout createCustomActionBarView() {
-        // Create a TextView for the title
+
         TextView textView = new TextView(this);
         textView.setText(R.string.app_name);
-        textView.setTextColor(Color.WHITE); // Set text color
-        textView.setTextSize(18); // Set text size
-        textView.setGravity(Gravity.END); // Align text to the right
+        textView.setTextColor(Color.WHITE);
+        textView.setTextSize(18);
+        textView.setGravity(Gravity.END);
 
 
         ImageView imageView = getImageView();
 
-        // Create a container to hold both the TextView and ImageView
         LinearLayout linearLayout = new LinearLayout(this);
         linearLayout.setOrientation(LinearLayout.HORIZONTAL);
         linearLayout.setGravity(Gravity.END | Gravity.CENTER_VERTICAL);
-        linearLayout.addView(imageView); // Add the icon first
-        linearLayout.addView(textView); // Add the title next to the icon
+        linearLayout.addView(imageView);
+        linearLayout.addView(textView);
 
         return linearLayout;
     }
 
     private @NonNull ImageView getImageView() {
         ImageView imageView = new ImageView(this);
-        imageView.setImageResource(R.drawable.baseline_people_24); // Replace with your icon resource
+        imageView.setImageResource(R.drawable.baseline_people_24);
 
-        // Set layout parameters with left margin
         LinearLayout.LayoutParams imageParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
-        imageParams.setMargins(16, 0, 0, 0); // Set left margin (16 pixels)
+        imageParams.setMargins(16, 0, 0, 0);
 
-        imageView.setLayoutParams(imageParams); // Apply the parameters to the ImageView
+        imageView.setLayoutParams(imageParams);
         return imageView;
     }
 
@@ -264,18 +259,13 @@ public class MainActivity extends AppCompatActivity implements OnClickUserInterf
                 emptyResultsTextView.setVisibility(View.GONE);
                 emptyResultsImageView.setVisibility(View.GONE);
 
-//                recyclerView.setVisibility(View.GONE);
-//                progressBar.setVisibility(View.VISIBLE);
-//                emptyResultsTextView.setVisibility(View.GONE);
-//                emptyResultsImageView.setVisibility(View.GONE);
-//                // Remove any previous runnable from the handler queue
+
                 if (searchRunnable != null) {
                     handler.removeCallbacks(searchRunnable);
                 }
 
                 searchRunnable = () -> {
                     if (s.toString().trim().isEmpty()) {
-                        // Reset the adapter if the search query is cleared
                         observePagedUsers();
                     } else {
                         searchUsers(s.toString());
@@ -283,24 +273,6 @@ public class MainActivity extends AppCompatActivity implements OnClickUserInterf
                 };
 
                 handler.postDelayed(searchRunnable, 500);
-
-//                // Create a new runnable for the search operation
-//                searchRunnable = () -> userViewModel.searchPagedUsers(s.toString()).observe(MainActivity.this, usersEntity->{
-//
-//                    System.out.println("userEntities: " + usersEntity);
-//                    if(usersEntity.isEmpty()){
-//                        showNoResults();
-//                    }else{
-//                        showResults();
-//                    }
-//
-//                    progressBar.setVisibility(View.GONE);
-//                    recyclerView.setVisibility(View.VISIBLE);
-//                    userAdapter.submitData(getLifecycle(),usersEntity);
-//                });
-
-                // Post the runnable with a delay of 500 milliseconds
-//                handler.postDelayed(searchRunnable, 500);
             }
 
             @Override
@@ -341,17 +313,6 @@ public class MainActivity extends AppCompatActivity implements OnClickUserInterf
         });
     }
 
-//    private void showResults() {
-//        recyclerView.setVisibility(View.VISIBLE);
-//        emptyResultsTextView.setVisibility(View.GONE);
-//        emptyResultsImageView.setVisibility(View.GONE);
-//    }
-//
-//    private void showNoResults() {
-//        recyclerView.setVisibility(View.GONE);
-//        emptyResultsTextView.setVisibility(View.VISIBLE);
-//        emptyResultsImageView.setVisibility(View.VISIBLE);
-//    }
 
     private void enableSwipeToDeleteAndUndo() {
         SwipeToDeleteCallback swipeToDeleteCallback = new SwipeToDeleteCallback(MainActivity.this) {
@@ -360,18 +321,16 @@ public class MainActivity extends AppCompatActivity implements OnClickUserInterf
                 int itemPosition = viewHolder.getAdapterPosition();
                 User user = userAdapter.getUser(itemPosition);
                 if(direction == ItemTouchHelper.LEFT) {
-                    Log.i("Swipe direction : ", "Left");
 
                     Snackbar snackbar = Snackbar.make(viewHolder.itemView,"You removed "+user.getFirst_name() + " " + user.getLast_name(),Snackbar.LENGTH_LONG);
                     snackbar.setAction("UNDO", v -> {
-//                        userAdapter.addUser(user,itemPosition);
+
                         userViewModel.insertUser(user).observe(MainActivity.this, success -> {
                             if ("success".equals(success)) {
                                 Toast.makeText(MainActivity.this, user.getFirst_name() + " " + user.getLast_name() + " restored successfully!", Toast.LENGTH_SHORT).show();
                             }
                         });
-                        //                        usersAdapter.notifyItemInserted(itemPosition);
-//                        userAdapter.notifyItemChanged(itemPosition,user);
+
                         Toast.makeText(MainActivity.this, user.getFirst_name() + " " + user.getLast_name() + " restored successfully!", Toast.LENGTH_SHORT).show();
 
                     });
@@ -383,13 +342,13 @@ public class MainActivity extends AppCompatActivity implements OnClickUserInterf
                             .create();
 
                     dialog.setOnShowListener(dialogInterface -> {
-                        // Get the buttons from the custom layout
+
                         Button positiveButton = dialog.findViewById(R.id.dialog_positive_button);
                         Button negativeButton = dialog.findViewById(R.id.dialog_negative_button);
 
                         positiveButton.setOnClickListener(v -> {
                             if(itemPosition!=-1){
-//                                userAdapter.removeUser(itemPosition);
+
                                 userViewModel.deleteUser(user).observe(MainActivity.this, success -> {
 
                                     if ("success".equals(success)) {
@@ -398,9 +357,6 @@ public class MainActivity extends AppCompatActivity implements OnClickUserInterf
                                         dialog.dismiss();
                                     }
                                 });
-//                            userAdapter.notifyItemRemoved(itemPosition);
-//                            usersAdapter.notifyItemRemoved(itemPosition);
-
                             }
 
                         });
@@ -421,7 +377,6 @@ public class MainActivity extends AppCompatActivity implements OnClickUserInterf
 
     private void navigateToAddUserActivity(){
         floatingActionButton.setOnClickListener(view -> {
-
                     startActivity(new Intent(MainActivity.this, AddUserActivity.class));
                 }
         );
@@ -432,6 +387,5 @@ public class MainActivity extends AppCompatActivity implements OnClickUserInterf
             Intent intent = new Intent(MainActivity.this,UserDetailsActivity.class);
             intent.putExtra("model",user);
             startActivity(intent);
-
     }
 }

@@ -2,45 +2,30 @@ package com.example.myapplication.adapter;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.Application;
 import android.app.Dialog;
 import android.content.Context;
-import android.graphics.Color;
 import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Filter;
-import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
-import androidx.lifecycle.LifecycleOwner;
 import androidx.paging.PagingDataAdapter;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.example.myapplication.R;
 import com.example.myapplication.interfaces.OnClickUserInterface;
 import com.example.myapplication.models.User;
-import com.example.myapplication.viewmodel.UserViewModel;
-
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
 
 public class UserAdapter extends PagingDataAdapter<User, UserAdapter.UserViewHolder> {
 
-//    List<User> usersList;
-//    private int rowIndex = -1;
-      private final Context context;
+    private final Context context;
     private OnClickUserInterface onClickUserInterface;
 
     public UserAdapter(@NonNull DiffUtil.ItemCallback<User> diffCallback,Context context) {
@@ -65,30 +50,9 @@ public class UserAdapter extends PagingDataAdapter<User, UserAdapter.UserViewHol
         User user = getItem(position);
         if(user != null){
 
-//        if (rowIndex == position){
-//            holder.row_linearlayout.setBackground(ContextCompat.getDrawable(context,R.drawable.lines2));
-//            holder.firstNameTextView.setTextColor(Color.BLACK);
-//            holder.lastNameTextView.setTextColor(Color.BLACK);
-//            holder.emailTextView.setTextColor(Color.BLACK);
-//        } else {
-//            holder.row_linearlayout.setBackground(ContextCompat.getDrawable(context,R.drawable.lines));
-//            holder.firstNameTextView.setTextColor(Color.WHITE);
-//            holder.lastNameTextView.setTextColor(Color.WHITE);
-//            holder.emailTextView.setTextColor(Color.WHITE);
-//        }
+        holder.row_linearlayout.setOnClickListener(v -> onClickUserInterface.onClickUser(user));
 
-        //Regular Click
-        holder.row_linearlayout.setOnClickListener(v -> {
-//            rowIndex = position;
-//            notifyItemChanged(rowIndex);
-//            notifyDataSetChanged();
-            onClickUserInterface.onClickUser(user);
-        });
-
-        holder.avatarImageView.setOnClickListener(v->{
-            createDialog(user.getAvatar(),user);
-        });
-
+        holder.avatarImageView.setOnClickListener(v-> createDialog(user.getAvatar(),user));
 
         try {
             holder.bindData(user.getFirst_name(), user.getLast_name(),user.getEmail(),user.getAvatar());
@@ -111,11 +75,6 @@ public class UserAdapter extends PagingDataAdapter<User, UserAdapter.UserViewHol
                 }
             };
 
-//    @Override
-//    public int getItemCount() {
-//        return this.usersList !=null ? this.usersList.size() : 0;
-//    }
-
     private void createDialog(String imageUrl,User user){
         Dialog dialog = new Dialog(context);
         dialog.setContentView(R.layout.dialog_image_recycler_view);
@@ -131,12 +90,12 @@ public class UserAdapter extends PagingDataAdapter<User, UserAdapter.UserViewHol
         if (context instanceof Activity) {
             Activity activity = (Activity) context;
             if (activity.isDestroyed() || activity.isFinishing()) {
-                glideRequestManager = Glide.with(context.getApplicationContext()); // Fallback to application context
+                glideRequestManager = Glide.with(context.getApplicationContext());
             } else {
-                glideRequestManager = Glide.with(activity); // Use activity context if valid
+                glideRequestManager = Glide.with(activity);
             }
         } else {
-            glideRequestManager = Glide.with(context.getApplicationContext()); // For non-activity context
+            glideRequestManager = Glide.with(context.getApplicationContext());
         }
 
         glideRequestManager
@@ -145,116 +104,6 @@ public class UserAdapter extends PagingDataAdapter<User, UserAdapter.UserViewHol
 
         dialog.show();
     }
-
-//    public void setUsers(List<User> users) {
-//        this.usersList = users;
-//        notifyDataSetChanged();
-//
-////        if(usersList == null){
-////            usersList = new ArrayList<>();
-////        }
-////
-////           UsersDiffCallback diffCallback = new UsersDiffCallback(usersList, users);
-////            DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffCallback);
-////
-////            usersList.clear();
-////            usersList.addAll(users);
-////
-////            diffResult.dispatchUpdatesTo(this);
-//    }
-
-//    public void removeUser(int position) {
-//
-//        String userRemoved = usersList.remove(position).getFirst_name();
-//        System.out.println("item removed:"+usersListFull.get(position).getFirst_name());
-//
-//        for(int i = 0 ; i<usersListFull.size();i++)
-//        {
-//            if(usersListFull.get(i).getFirst_name().equals(userRemoved)){
-//                usersListFull.remove(i);
-//            }
-//        }
-//
-//        notifyItemChanged(position);
-//        notifyDataSetChanged();
-//
-//
-//        notifyItemRangeChanged(position, usersList.size());
-//        userViewModel.setUsersLiveData(usersList);
-//
-//        if (position < rowIndex) {
-//            rowIndex--;
-//            notifyItemChanged(rowIndex);
-//            notifyDataSetChanged();
-//        } else if (position == rowIndex) {
-//            rowIndex = -1;
-//            notifyItemChanged(rowIndex);
-//            notifyDataSetChanged();
-//        }
-//    }
-
-//    public void addUser(User user,int position){
-//        usersList.add(position, user);
-//        usersListFull.add(position, user);
-//        usersList.sort(new Comparator<User>() {
-//            @Override
-//            public int compare(User o1, User o2) {
-//                return o1.getFirst_name().compareTo(o2.getFirst_name());
-//
-//            }
-//        });
-//
-//        usersListFull.sort(new Comparator<User>() {
-//            @Override
-//            public int compare(User o1, User o2) {
-//                return o1.getFirst_name().compareTo(o2.getFirst_name());
-//
-//            }
-//        });
-//
-//        notifyDataSetChanged();
-//    }
-//
-//    public User getUser(int position) {
-//        return usersList.get(position);
-//    }
-
-//    private Filter exampleFilter = new Filter() {
-//        @Override
-//        protected FilterResults performFiltering(CharSequence constraint) {
-//            ArrayList<User> filteredList = new ArrayList<>();
-//            if(constraint == null || constraint.length() == 0) {
-//                filteredList.addAll(usersList);
-//            }
-//            else{
-//                String filterPattern = constraint.toString().toLowerCase().trim();
-//                for(User user:usersList) {
-//                    if (user.getFirst_name().toLowerCase().contains(filterPattern) ||
-//                            user.getLast_name().toLowerCase().contains(filterPattern)) {
-//                        filteredList.add(user);
-//                    }
-//                }
-//            }
-//            FilterResults results = new FilterResults();
-//            results.values = filteredList;
-//            return results;
-//        }
-//
-//        @Override
-//        protected void publishResults(CharSequence constraint, FilterResults results) {
-//            if(usersList!=null) {
-//                usersList.clear();
-//                usersList.addAll((ArrayList<User>) results.values);
-//                notifyDataSetChanged();
-//
-//            }
-//        }
-//    };
-//
-//    @Override
-//    public Filter getFilter() {
-//        return exampleFilter;
-//    }
 
     public static class UserViewHolder extends RecyclerView.ViewHolder{
 
