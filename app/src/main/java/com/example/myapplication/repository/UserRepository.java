@@ -5,6 +5,11 @@ import android.content.Context;
 import android.database.sqlite.SQLiteConstraintException;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.paging.Pager;
+import androidx.paging.PagingConfig;
+import androidx.paging.PagingData;
+import androidx.paging.PagingLiveData;
+
 import com.example.myapplication.database.AppDatabase;
 import com.example.myapplication.models.User;
 import java.util.List;
@@ -57,8 +62,22 @@ public class UserRepository implements IUserRepository {
         return result;
     }
 
-    public void deleteUser(User user) {
-        executor.execute(() -> appDatabase.userDao().deleteUser(user));
+    public LiveData<String> deleteUser(User user) {
+        MutableLiveData<String> result = new MutableLiveData<>();
+        executor.execute(() -> {
+            try {
+                int rowsDeleted = appDatabase.userDao().deleteUser(user);
+                if (rowsDeleted > 0) {
+                    result.postValue("success");
+                } else {
+                    result.postValue("error");
+                }
+            } catch (Exception e) {
+                result.postValue("error");
+            }
+        });
+
+        return result;
     }
 
     public LiveData<List<User>> getAllUsers()  {
@@ -71,5 +90,24 @@ public class UserRepository implements IUserRepository {
 
     public LiveData<Integer> getUserCount() {
       return appDatabase.userDao().getUserCount();
+    }
+
+
+    public LiveData<PagingData<User>> getPagedUsers() {
+        return PagingLiveData.getLiveData(new Pager<>(
+                new PagingConfig(
+                        2,0,true
+                ),
+                () -> appDatabase.userDao().getAllUsersPaging()
+        ));
+    }
+
+    public LiveData<PagingData<User>> searchPagedUsers(String query) {
+        return PagingLiveData.getLiveData(new Pager<>(
+                new PagingConfig(
+                        2,0,true
+                ),
+                () -> appDatabase.userDao().searchUsersPaging("%" + query + "%")
+        ));
     }
 }

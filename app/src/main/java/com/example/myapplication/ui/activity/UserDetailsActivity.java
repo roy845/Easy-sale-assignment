@@ -390,8 +390,11 @@ public class UserDetailsActivity extends AppCompatActivity {
                 userToUpdate.setEmail(email);
 
                 if (selectedImageUri != null) {
+                    System.out.println("sdfsdf: " + selectedImageUri);
                     userToUpdate.setAvatar(selectedImageUri.toString());
                 }
+
+
 
                 LiveData<String> result = usersViewModel.updateUser(userToUpdate);
 
@@ -399,7 +402,7 @@ public class UserDetailsActivity extends AppCompatActivity {
                     @Override
                     public void onChanged(String result) {
                         if ("success".equals(result)) {
-                            Toast.makeText(UserDetailsActivity.this, "User " + firstName + " " + lastName + " added successfully", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(UserDetailsActivity.this, "User " + firstName + " " + lastName + " updated successfully", Toast.LENGTH_SHORT).show();
                             finish();
                         } else if ("constraint_failure".equals(result)) {
                             showEmailExistsError(email);

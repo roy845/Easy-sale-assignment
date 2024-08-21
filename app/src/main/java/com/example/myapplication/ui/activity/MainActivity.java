@@ -29,6 +29,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.paging.LoadState;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -92,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements OnClickUserInterf
 
         initViews();
         setupViewModel();
-        observeAllUsers();
+        observePagedUsers();
         setupEditTextSearch();
         observeErrorLiveData();
         enableSwipeToDeleteAndUndo();
@@ -115,6 +117,7 @@ public class MainActivity extends AppCompatActivity implements OnClickUserInterf
 
     public void observeErrorLiveData(){
         userViewModel.getErrorLiveData().observe(this, error -> {
+            System.out.println("error : "+error);
             if(error){
                 navigateToErrorActivity();
             }else {
@@ -188,7 +191,7 @@ public class MainActivity extends AppCompatActivity implements OnClickUserInterf
         floatingActionButton = findViewById(R.id.fab_add_user);
         recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        userAdapter = new UserAdapter(this);
+        userAdapter = new UserAdapter(UserAdapter.DIFF_CALLBACK,this);
         recyclerView.setAdapter(userAdapter);
         searchEditText = findViewById(R.id.editSearch);
         progressBar = findViewById(R.id.progressBarId);
@@ -198,14 +201,15 @@ public class MainActivity extends AppCompatActivity implements OnClickUserInterf
     }
 
     private void setupViewModel() {
-        userViewModel = UserViewModel.getInstance(getApplication());
+        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
     }
 
-    private void observeAllUsers(){
-        userViewModel.getAllUsers().observe(MainActivity.this, usersList -> {
-            if(usersList!=null){
-                userAdapter.setUsers(usersList);
-            }
+    private void observePagedUsers(){
+        userViewModel.getPagedUsers().observe(this, usersList -> {
+
+            userAdapter.submitData(getLifecycle(),usersList);
+            handleEmptyResults();
+
         });
     }
 
@@ -245,6 +249,7 @@ public class MainActivity extends AppCompatActivity implements OnClickUserInterf
         return imageView;
     }
 
+
     private void setupEditTextSearch() {
         searchEditText.addTextChangedListener(new TextWatcher() {
 
@@ -254,33 +259,48 @@ public class MainActivity extends AppCompatActivity implements OnClickUserInterf
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                recyclerView.setVisibility(View.GONE);
                 progressBar.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.GONE);
                 emptyResultsTextView.setVisibility(View.GONE);
                 emptyResultsImageView.setVisibility(View.GONE);
-                // Remove any previous runnable from the handler queue
+
+//                recyclerView.setVisibility(View.GONE);
+//                progressBar.setVisibility(View.VISIBLE);
+//                emptyResultsTextView.setVisibility(View.GONE);
+//                emptyResultsImageView.setVisibility(View.GONE);
+//                // Remove any previous runnable from the handler queue
                 if (searchRunnable != null) {
                     handler.removeCallbacks(searchRunnable);
                 }
 
-                // Create a new runnable for the search operation
-                searchRunnable = () -> userViewModel.searchUsers(s.toString()).observe(MainActivity.this, usersEntity->{
-
-                    System.out.println("userEntities: " + usersEntity);
-                    if(usersEntity.isEmpty()){
-                        showNoResults();
-                    }else{
-                        showResults();
+                searchRunnable = () -> {
+                    if (s.toString().trim().isEmpty()) {
+                        // Reset the adapter if the search query is cleared
+                        observePagedUsers();
+                    } else {
+                        searchUsers(s.toString());
                     }
+                };
 
-                    progressBar.setVisibility(View.GONE);
-                    recyclerView.setVisibility(View.VISIBLE);
-                    userAdapter.setUsers(usersEntity);
-                });
+                handler.postDelayed(searchRunnable, 500);
+
+//                // Create a new runnable for the search operation
+//                searchRunnable = () -> userViewModel.searchPagedUsers(s.toString()).observe(MainActivity.this, usersEntity->{
+//
+//                    System.out.println("userEntities: " + usersEntity);
+//                    if(usersEntity.isEmpty()){
+//                        showNoResults();
+//                    }else{
+//                        showResults();
+//                    }
+//
+//                    progressBar.setVisibility(View.GONE);
+//                    recyclerView.setVisibility(View.VISIBLE);
+//                    userAdapter.submitData(getLifecycle(),usersEntity);
+//                });
 
                 // Post the runnable with a delay of 500 milliseconds
-                handler.postDelayed(searchRunnable, 500);
+//                handler.postDelayed(searchRunnable, 500);
             }
 
             @Override
@@ -289,17 +309,49 @@ public class MainActivity extends AppCompatActivity implements OnClickUserInterf
         });
     }
 
+    private void handleEmptyResults() {
+        userAdapter.addLoadStateListener(loadStates -> {
+            if (loadStates.getRefresh() instanceof LoadState.NotLoading && userAdapter.getItemCount() == 0) {
+                showNoResults();
+            } else {
+                showResults();
+            }
+            progressBar.setVisibility(View.GONE);
+            return null;
+        });
+    }
+
     private void showResults() {
         recyclerView.setVisibility(View.VISIBLE);
-        emptyResultsTextView.setVisibility(View.GONE);
         emptyResultsImageView.setVisibility(View.GONE);
+        emptyResultsTextView.setVisibility(View.GONE);
     }
 
     private void showNoResults() {
         recyclerView.setVisibility(View.GONE);
-        emptyResultsTextView.setVisibility(View.VISIBLE);
         emptyResultsImageView.setVisibility(View.VISIBLE);
+        emptyResultsTextView.setVisibility(View.VISIBLE);
     }
+
+    private void searchUsers(String query) {
+        userViewModel.searchPagedUsers(query).observe(this, pagingData -> {
+            userAdapter.submitData(getLifecycle(), pagingData);
+            handleEmptyResults();
+
+        });
+    }
+
+//    private void showResults() {
+//        recyclerView.setVisibility(View.VISIBLE);
+//        emptyResultsTextView.setVisibility(View.GONE);
+//        emptyResultsImageView.setVisibility(View.GONE);
+//    }
+//
+//    private void showNoResults() {
+//        recyclerView.setVisibility(View.GONE);
+//        emptyResultsTextView.setVisibility(View.VISIBLE);
+//        emptyResultsImageView.setVisibility(View.VISIBLE);
+//    }
 
     private void enableSwipeToDeleteAndUndo() {
         SwipeToDeleteCallback swipeToDeleteCallback = new SwipeToDeleteCallback(MainActivity.this) {
@@ -312,8 +364,12 @@ public class MainActivity extends AppCompatActivity implements OnClickUserInterf
 
                     Snackbar snackbar = Snackbar.make(viewHolder.itemView,"You removed "+user.getFirst_name() + " " + user.getLast_name(),Snackbar.LENGTH_LONG);
                     snackbar.setAction("UNDO", v -> {
-                        userAdapter.addUser(user,itemPosition);
-                        userViewModel.insertUser(user);
+//                        userAdapter.addUser(user,itemPosition);
+                        userViewModel.insertUser(user).observe(MainActivity.this, success -> {
+                            if ("success".equals(success)) {
+                                Toast.makeText(MainActivity.this, user.getFirst_name() + " " + user.getLast_name() + " restored successfully!", Toast.LENGTH_SHORT).show();
+                            }
+                        });
                         //                        usersAdapter.notifyItemInserted(itemPosition);
 //                        userAdapter.notifyItemChanged(itemPosition,user);
                         Toast.makeText(MainActivity.this, user.getFirst_name() + " " + user.getLast_name() + " restored successfully!", Toast.LENGTH_SHORT).show();
@@ -332,14 +388,21 @@ public class MainActivity extends AppCompatActivity implements OnClickUserInterf
                         Button negativeButton = dialog.findViewById(R.id.dialog_negative_button);
 
                         positiveButton.setOnClickListener(v -> {
-                            userAdapter.removeUser(itemPosition);
-                            userViewModel.deleteUser(user);
+                            if(itemPosition!=-1){
+//                                userAdapter.removeUser(itemPosition);
+                                userViewModel.deleteUser(user).observe(MainActivity.this, success -> {
+
+                                    if ("success".equals(success)) {
+                                        Toast.makeText(MainActivity.this, user.getFirst_name() + " " + user.getLast_name() + " removed successfully!", Toast.LENGTH_SHORT).show();
+                                        snackbar.show();
+                                        dialog.dismiss();
+                                    }
+                                });
 //                            userAdapter.notifyItemRemoved(itemPosition);
 //                            usersAdapter.notifyItemRemoved(itemPosition);
-                            Toast.makeText(MainActivity.this, user.getFirst_name() + " " + user.getLast_name() + " removed successfully!", Toast.LENGTH_SHORT).show();
-                            snackbar.show();
 
-                            dialog.dismiss();
+                            }
+
                         });
 
                         negativeButton.setOnClickListener(v -> {

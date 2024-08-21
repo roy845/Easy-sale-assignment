@@ -1,6 +1,9 @@
 package com.example.myapplication.viewmodel;
 
 import android.app.Application;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -19,6 +22,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.HttpException;
 import retrofit2.Response;
+import androidx.paging.PagingData;
 
 public class UserViewModel extends AndroidViewModel {
 
@@ -27,19 +31,20 @@ public class UserViewModel extends AndroidViewModel {
     private final ExecutorService executorService;
     private MutableLiveData<Boolean> errorLiveData = new MutableLiveData<>();
     private MutableLiveData<Boolean> loadingInitialUsersLiveData = new MutableLiveData<>();
-
     public LiveData<Boolean> getErrorLiveData() {
         return errorLiveData;
     }
-
     public LiveData<Boolean> getLoadingInitialUsers(){
         return loadingInitialUsersLiveData;
     }
+    private static final String PREF_FETCHED_USERS = "pref_fetched_users";
+    private SharedPreferences sharedPreferences;
 
     public UserViewModel(@NonNull Application application) {
         super(application);
         userRepository = new UserRepository(application);
-        this.executorService = Executors.newSingleThreadExecutor();;
+        this.executorService = Executors.newSingleThreadExecutor();
+        this.sharedPreferences = application.getSharedPreferences("MyPrefsFile", Context.MODE_PRIVATE);
         checkAndFetchUsersFromApi();
     }
 
@@ -69,31 +74,41 @@ public class UserViewModel extends AndroidViewModel {
         return userRepository.updateUser(user);
     }
 
-    public void deleteUser(User user) {
-        userRepository.deleteUser(user);
+    public LiveData<String> deleteUser(User user) {
+       return userRepository.deleteUser(user);
     }
 
-    public LiveData<List<User>> getAllUsers()  {
-        return userRepository.getAllUsers();
+//    public LiveData<List<User>> getAllUsers()  {
+//        return userRepository.getAllUsers();
+//    }
+//
+//    public LiveData<List<User>> searchUsers(String query)  {
+//        return userRepository.searchUsers(query);
+//    }
+//
+//    private LiveData<Integer> getUserCount(){
+//        return userRepository.getUserCount();
+//    }
+
+    public LiveData<PagingData<User>> getPagedUsers() {
+        return userRepository.getPagedUsers();
     }
 
-    public LiveData<List<User>> searchUsers(String query)  {
-        return userRepository.searchUsers(query);
-    }
-
-    private LiveData<Integer> getUserCount(){
-        return userRepository.getUserCount();
+    public LiveData<PagingData<User>> searchPagedUsers(String query) {
+        return userRepository.searchPagedUsers(query);
     }
 
     private void checkAndFetchUsersFromApi() {
-        getUserCount().observeForever(userCount -> {
-            if (userCount != null && userCount == 0) {
-                fetchAndStoreUsers(1);
-            }else{
-                errorLiveData.setValue(false);
-            }
-        });
+        boolean hasFetchedUsers = sharedPreferences.getBoolean(PREF_FETCHED_USERS, false);
+        if (!hasFetchedUsers) {
+            fetchAndStoreUsers(1);
+            errorLiveData.setValue(false);
+        } else {
+            errorLiveData.setValue(false);
+            loadingInitialUsersLiveData.setValue(false);
+        }
     }
+
 
     private void fetchAndStoreUsers(int pageNumber) {
         loadingInitialUsersLiveData.setValue(true);
@@ -105,16 +120,18 @@ public class UserViewModel extends AndroidViewModel {
                 if (response.isSuccessful() && response.body() != null) {
                     List<User> usersFromApi = response.body().getData();
 
-                    executorService.execute(() -> insertAllUsers(usersFromApi));
+                    executorService.execute(() -> {
+                        insertAllUsers(usersFromApi);
+                    });
 
-                    int totalPages = response.body().getTotalPages();
-                    if (pageNumber < totalPages) {
-                        fetchAndStoreUsers(pageNumber + 1);
-                    }else{
-                        loadingInitialUsersLiveData.setValue(false);
-                        errorLiveData.setValue(false);
-                        Toast.makeText(getApplication().getApplicationContext(), "Users fetched successfully", Toast.LENGTH_LONG).show();
-                    }
+                        if (pageNumber < response.body().getTotalPages()) {
+                            fetchAndStoreUsers(pageNumber + 1);
+                        } else {
+                            loadingInitialUsersLiveData.setValue(false);
+                            errorLiveData.setValue(false); // Notify LiveData that data is ready
+                            sharedPreferences.edit().putBoolean(PREF_FETCHED_USERS, true).apply(); // Set the flag to true
+                            Toast.makeText(getApplication().getApplicationContext(), "Users fetched successfully", Toast.LENGTH_LONG).show();
+                        }
                 }
             }
 
@@ -125,7 +142,6 @@ public class UserViewModel extends AndroidViewModel {
                 loadingInitialUsersLiveData.setValue(false);
             }
         });
-
     }
 
     private void handleApiFailure(Throwable t) {

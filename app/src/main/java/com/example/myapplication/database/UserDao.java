@@ -2,6 +2,7 @@ package com.example.myapplication.database;
 
 
 import androidx.lifecycle.LiveData;
+import androidx.paging.PagingSource;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -28,7 +29,7 @@ public interface UserDao {
     void updateUser(User user);
 
     @Delete
-    void deleteUser(User user);
+    int deleteUser(User user);
 
     @Query("SELECT * FROM users ORDER BY LOWER(first_name) ASC")
     LiveData<List<User>> getAllUsers();
@@ -38,4 +39,10 @@ public interface UserDao {
 
     @Query("SELECT COUNT(*) FROM users")
     LiveData<Integer> getUserCount();
+
+    @Query("SELECT * FROM users ORDER BY LOWER(first_name) ASC")
+    PagingSource<Integer, User> getAllUsersPaging();
+
+    @Query("SELECT * FROM users WHERE LOWER(first_name) LIKE LOWER(:query) OR LOWER(last_name) LIKE LOWER(:query) ORDER BY LOWER(first_name) ASC")
+    PagingSource<Integer, User> searchUsersPaging(String query);
 }

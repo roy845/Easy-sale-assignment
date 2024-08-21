@@ -2,10 +2,14 @@ package com.example.myapplication.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import androidx.annotation.Nullable;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
+
+import java.util.Objects;
 
 
 @Entity(tableName = "users", indices = {@Index(value = "email", unique = true)})
@@ -27,6 +31,23 @@ public class User implements Parcelable {
                 ", last_name='" + last_name + '\'' +
                 ", avatar='" + avatar + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        User user = (User) obj;
+        return id == user.id &&
+                Objects.equals(email, user.email) &&
+                Objects.equals(first_name, user.first_name) &&
+                Objects.equals(last_name, user.last_name) &&
+                Objects.equals(avatar, user.avatar);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, email, first_name, last_name);
     }
 
     public User(int id, String first_name, String last_name, String email, String avatar) {
