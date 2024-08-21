@@ -102,7 +102,7 @@ The application follows the MVVM (Model-View-ViewModel) architecture.
 
 1.  Clone the Repository:
 
-        git clone https://github.com/yourusername/your-repository.git
+        git clone https://github.com/roy845/Easy-sale-assignment.git
 
 2.  Open the Project:
 
