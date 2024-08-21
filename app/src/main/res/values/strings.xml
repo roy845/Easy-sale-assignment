@@ -1,0 +1,49 @@
+<resources>
+    <string name="app_name">Users Management</string>
+    <string name="welcome_dialog_title">Users Management App</string>
+    <string name="fab_description">Add User</string>
+    <string name="delete_all">Delete all users</string>
+    <string name="search_hint">Search users…</string>
+    <string name="empty_results_description">Empty Results Image</string>
+    <string name="no_search_results_found">No search results found!</string>
+    <string name="no_users_found">No users found!</string>
+    <string name="something_went_wrong">Something went wrong!</string>
+    <string name="error_image_description">Error Image description</string>
+    <string name="email_edit_text_hint">Email</string>
+    <string name="firstname_edit_text_hint">First Name</string>
+    <string name="lastname_edit_text_hint">Last Name</string>
+    <string name="label_email_edit_text_hint">Email</string>
+    <string name="label_firstname_edit_text_hint">First Name</string>
+    <string name="label_lastname_edit_text_hint">Last Name</string>
+    <string name="cancel_btn_text">Cancel</string>
+    <string name="add_btn_text">Add</string>
+    <string name="update_btn_text">Update</string>
+    <string name="retry"> Retry</string>
+    <string name="error_missing_email">*missing email</string>
+    <string name="error_invalid_email">*invalid email</string>
+    <string name="error_invalid_firstname">*missing firstname</string>
+    <string name="error_invalid_lastname">*missing lastname</string>
+    <string name="error_missing_avatar">*missing avatar</string>
+    <string name="general_feedback">*User already exists</string>
+    <string name="checkBoxTxt">OK, please do not show me again.</string>
+    <string name="modal_header">Users management App</string>
+    <string name="add_new_user_title">Add New User</string>
+    <string name="update_user_title">Edit User</string>
+    <string name="load_more_btn_txt">Load</string>
+    <string name="error_loading_users_title">Error Loading Users</string>
+    <string name="welcome_dialog_message">Welcome to <b>Easy-Sale User Management!</b><br/><br/>
+    Manage your users effortlessly with our easy-to-use application.\n\nHere’s what you can do:\n\n
+    <b>● View Users:</b> Browse through the list of users fetched directly from the ReqRes API.\n\n
+    <b>● Add New Users:</b> Easily add new users to your list with just a few clicks.\n\n
+    <b>● Edit User Details:</b> Keep user information up to date with our simple edit functionality.\n\n
+    <b>● Delete Users:</b> Remove users from your list whenever necessary.\n\n
+    <b>● Search Users:</b> Quickly find users by name or lastname using our search feature.\n\n
+    Get started now and experience seamless user management!\n\n
+    </string>
+    <string name="ok">OK</string>
+    <string name="learn_more">Learn More</string>
+    <string name="lets_go">Let’s Go</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="unexpected_error_occured">*An unexpected error occurred</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>

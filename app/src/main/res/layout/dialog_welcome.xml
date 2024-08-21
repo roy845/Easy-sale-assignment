@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="24dp"
+    android:background="@drawable/white_border">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layoutDirection="ltr">
+
+        <TextView
+            android:id="@+id/tv_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/welcome_dialog_title"
+            android:textSize="25sp"
+            android:textAppearance="?attr/textAppearanceHeadline6"
+            android:layout_gravity="center_horizontal"
+            android:textColor="?attr/colorPrimary" />
+
+        <TextView
+            android:id="@+id/tv_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/welcome_dialog_message"
+            android:textAppearance="?attr/textAppearanceBody1"
+            android:textColor="@color/white" />
+
+        <CheckBox
+            android:id="@+id/checkbox_dont_show"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:text="@string/checkBoxTxt" />
+
+        <!-- OK Button -->
+        <Button
+            android:id="@+id/btn_ok"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/ok"
+            app:iconGravity="end"
+            app:icon="@drawable/baseline_check_24"
+            android:backgroundTint="?attr/colorPrimary"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="16dp"/>
+
+        <!-- Let's Go Button -->
+        <Button
+            android:id="@+id/btn_lets_go"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/lets_go"
+            app:iconGravity="end"
+            app:icon="@drawable/baseline_arrow_forward_24"
+            android:backgroundTint="@android:color/holo_green_light"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="16dp"/>
+
+        <!-- Learn More Button -->
+        <Button
+            android:id="@+id/btn_learn_more"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/learn_more"
+            app:iconGravity="end"
+            app:icon="@drawable/baseline_info_24"
+            android:backgroundTint="@android:color/holo_orange_light"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="16dp"/>
+
+    </LinearLayout>
+</ScrollView>
