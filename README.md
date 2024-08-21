@@ -1,16 +1,12 @@
 <table>
-<tr>
-<td>
-
-## Android Developer Assignment
-
-</td>
-<td>
-
-<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT2oS8IZc-LuWk9ZsLUx8_de1AnL47_vxjS1abc-b5fx1jd8kFP_FKwayC0gtJtLxowcYo&usqp=CAU" alt="Android Developer Assignment Image" />
-
-</td>
-</tr>
+  <tr>
+    <td style="text-align: center; vertical-align: middle;">
+      <h2>Android Developer Assignment</h2>
+    </td>
+    <td style="text-align: center; vertical-align: middle;">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT2oS8IZc-LuWk9ZsLUx8_de1AnL47_vxjS1abc-b5fx1jd8kFP_FKwayC0gtJtLxowcYo&usqp=CAU" alt="Android Developer Assignment Image" />
+    </td>
+  </tr>
 </table>
 
 ## Table of Contents
