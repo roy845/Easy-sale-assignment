@@ -28,6 +28,9 @@ public interface UserDao {
     @Delete
     int deleteUser(User user);
 
+    @Query("DELETE FROM users")
+    int deleteAllUsers();
+
     @Query("SELECT * FROM users WHERE LOWER(first_name) LIKE LOWER(:query) OR LOWER(last_name) LIKE LOWER(:query) ORDER BY LOWER(first_name) ASC LIMIT :limit OFFSET :offset")
     PagingSource<Integer, User> searchUsersWithPagination(String query, int offset,int limit);
 

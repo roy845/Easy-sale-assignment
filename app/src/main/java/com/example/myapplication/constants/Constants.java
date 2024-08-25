@@ -19,6 +19,7 @@ public class Constants {
     public static final String SUCCESS = "success";
     public static final String ERROR = "error";
     public static final String CONSTRAINT_FAILURE = "constraint_failure";
+    public static final String ERROR_INSERTING_USERS = "Error inserting users into the database. Please try again.";
     public static final String IS_DIALOG_SHOWING = "isDialogShowing";
     public static final String ERROR_MISSING_EMAIL_VISIBILITY = "errorMissingEmailVisibility";
     public static final String ERROR_INVALID_EMAIL_VISIBILITY = "errorInvalidEmailVisibility";
@@ -43,6 +44,9 @@ public class Constants {
     public static final String SELECTED_IMAGE_STRING = "selectedImageString";
     public static final String URI_STRING = "uri";
     public static final String STRING = "string";
+    public static final String ALL_USERS_REMOVED_SUCCESSFULLY = "All users removed successfully!";
+    public static final String FAILED_TO_REMOVE_USERS = "Failed to remove users. Please try again.";
+    public static final String ARE_YOU_SURE_DO_YOU_WANT_TO_DELETE_ALL_USERS_PROMPT = "Are you sure do you want to delete all users ?";
     public static final int ITEMS_PER_PAGE = 6;
     public static final int BAR_COLOR_USAGE = 0xFFFFA500;
     public static final int BAR_COLOR_USERS = 0xFF56B7F1;

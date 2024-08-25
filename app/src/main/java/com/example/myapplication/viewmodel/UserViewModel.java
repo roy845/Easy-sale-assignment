@@ -74,6 +74,10 @@ public class UserViewModel extends AndroidViewModel {
        return userRepository.deleteUser(user);
     }
 
+    public LiveData<String> deleteAllUsers() {
+        return userRepository.deleteAllUsers();
+    }
+
     public LiveData<PagingData<User>> loadUsersByPage(int offset, int pageSize) {
         return userRepository.loadUsersByPage(offset,pageSize);
     }

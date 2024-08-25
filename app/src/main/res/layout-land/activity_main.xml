@@ -82,6 +82,15 @@
                 app:tint="@android:color/white" />
 
             <ImageButton
+                android:id="@+id/button_deleteAll"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="?attr/selectableItemBackground"
+                android:contentDescription="@string/delete_all"
+                android:src="@drawable/baseline_delete_24"
+                app:tint="@android:color/white" />
+
+            <ImageButton
                 android:id="@+id/button_graphs"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
@@ -130,6 +139,7 @@
                 android:id="@+id/empty_results_image"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
+                android:layout_marginTop="126dp"
                 android:contentDescription="@string/empty_results_description"
                 android:src="@drawable/baseline_search_off_24_white"
                 android:visibility="gone" />
@@ -138,7 +148,7 @@
                 android:id="@+id/empty_results_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="26dp"
                 android:alpha="0.3"
                 android:text="@string/no_search_results_found"
                 android:textColor="@color/white"
@@ -202,7 +212,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
                 android:layout_marginEnd="4dp"
-                android:text="/"
+                android:text="@string/page_separator"
                 android:textColor="@android:color/white"
                 android:textSize="16sp" />
 
@@ -214,7 +224,7 @@
                 android:textSize="16sp" />
 
 
-            <!-- Spacer to push the "Next" button to the right -->
+            <!-- Spacer to push the "Prev" button to the right -->
             <Space
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

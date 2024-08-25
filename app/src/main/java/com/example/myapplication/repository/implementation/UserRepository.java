@@ -43,10 +43,21 @@ public class UserRepository implements IUserRepository {
 
         return result;
     }
+
     @Override
-    public void insertAllUsers(List<User> users) {
-        executor.execute(() -> appDatabase.userDao().insertAllUsers(users));
+    public LiveData<String> insertAllUsers(List<User> users) {
+        MutableLiveData<String> result = new MutableLiveData<>();
+        executor.execute(() -> {
+            try {
+                appDatabase.userDao().insertAllUsers(users);
+                result.postValue(Constants.SUCCESS);
+            } catch (Exception e) {
+                result.postValue(Constants.ERROR);
+            }
+        });
+        return result;
     }
+
     @Override
     public LiveData<String> updateUser(User user) {
         MutableLiveData<String> result = new MutableLiveData<>();
@@ -69,6 +80,25 @@ public class UserRepository implements IUserRepository {
         executor.execute(() -> {
             try {
                 int rowsDeleted = appDatabase.userDao().deleteUser(user);
+                if (rowsDeleted > 0) {
+                    result.postValue(Constants.SUCCESS);
+                } else {
+                    result.postValue(Constants.ERROR);
+                }
+            } catch (Exception e) {
+                result.postValue(Constants.ERROR);
+            }
+        });
+
+        return result;
+    }
+
+    @Override
+    public LiveData<String> deleteAllUsers() {
+        MutableLiveData<String> result = new MutableLiveData<>();
+        executor.execute(() -> {
+            try {
+                int rowsDeleted = appDatabase.userDao().deleteAllUsers();
                 if (rowsDeleted > 0) {
                     result.postValue(Constants.SUCCESS);
                 } else {

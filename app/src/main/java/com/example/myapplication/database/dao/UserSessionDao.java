@@ -22,7 +22,7 @@ public interface UserSessionDao {
     @Query("SELECT * FROM user_sessions WHERE sessionDate = :date LIMIT 1")
     UserSession getSessionByDate(Date date);
 
-    @Query("SELECT strftime('%m-%d', datetime(sessionDate / 1000, 'unixepoch')) AS sessionDate, SUM(sessionDuration) as totalDuration " +
+    @Query("SELECT strftime('%m-%d', datetime(sessionDate / 1000, 'unixepoch','+1 day')) AS sessionDate, SUM(sessionDuration) as totalDuration " +
             "FROM user_sessions " +
             "WHERE sessionDate BETWEEN :startDate AND :endDate " +
             "GROUP BY sessionDate ORDER BY sessionDate ASC")

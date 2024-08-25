@@ -9,9 +9,10 @@ import java.util.List;
 
 public interface IUserRepository {
     LiveData<String> insertUser(User user);
-    void insertAllUsers(List<User> users);
+    LiveData<String> insertAllUsers(List<User> users);
     LiveData<String> updateUser(User user);
     LiveData<String> deleteUser(User user);
+    LiveData<String> deleteAllUsers();
     LiveData<List<UserCountPerMonth>> getUserCountPerMonth(long startDate, long endDate);
     LiveData<Integer> getTotalUserCount();
     LiveData<PagingData<User>> loadUsersByPage(int offset, int pageSize);

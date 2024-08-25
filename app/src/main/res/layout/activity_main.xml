@@ -82,6 +82,15 @@
                 app:tint="@android:color/white" />
 
             <ImageButton
+                android:id="@+id/button_deleteAll"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="?attr/selectableItemBackground"
+                android:contentDescription="@string/delete_all"
+                android:src="@drawable/baseline_delete_24"
+                app:tint="@android:color/white" />
+
+            <ImageButton
                 android:id="@+id/button_graphs"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
@@ -202,7 +211,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
                 android:layout_marginEnd="4dp"
-                android:text="/"
+                android:text="@string/page_separator"
                 android:textColor="@android:color/white"
                 android:textSize="16sp" />
 
@@ -214,7 +223,7 @@
                 android:textSize="16sp" />
 
 
-            <!-- Spacer to push the "Next" button to the right -->
+            <!-- Spacer to push the "Prev" button to the right -->
             <Space
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

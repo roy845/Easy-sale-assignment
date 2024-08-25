@@ -43,6 +43,8 @@ This Android application demonstrates the ability to work with RESTful APIs, loc
 
         ● Delete users.
 
+        ● Delete ALL users.
+
         ● Search users.
 
 <b>Enhanced UI/UX:</b>
@@ -178,13 +180,13 @@ The application follows the MVVM (Model-View-ViewModel) architecture.
 
 <b> Welcome dialog: </b>
 
-<a href="https://ibb.co/F7wyWz3"><img src="https://i.ibb.co/2KtC6dh/Whats-App-Image-2024-08-25-at-18-56-50.jpg" alt="Whats-App-Image-2024-08-25-at-18-56-50" border="1"></a>
+<a href="https://ibb.co/YpRhLfY"><img src="https://i.ibb.co/4PmpV49/Whats-App-Image-2024-08-26-at-01-01-01.jpg" alt="Whats-App-Image-2024-08-26-at-01-01-01" border="1"></a>
 
 <b> Display list of users: </b>
 
-<a href="https://ibb.co/tBqn231"><img src="https://i.ibb.co/1ZrBXb4/Whats-App-Image-2024-08-25-at-18-33-23.jpg" alt="Whats-App-Image-2024-08-25-at-18-33-23" border="1"></a>
+<a href="https://ibb.co/1R7h9Xg"><img src="https://i.ibb.co/r5FTZpj/Whats-App-Image-2024-08-26-at-01-05-15.jpg" alt="Whats-App-Image-2024-08-26-at-01-05-15" border="1"></a>
 
-<a href="https://ibb.co/98rH4xb"><img src="https://i.ibb.co/xC7qgn1/Whats-App-Image-2024-08-25-at-18-33-22.jpg" alt="Whats-App-Image-2024-08-25-at-18-33-22" border="1"></a>
+<a href="https://ibb.co/KbPhB4j"><img src="https://i.ibb.co/YPCQJn7/Whats-App-Image-2024-08-26-at-01-05-14.jpg" alt="Whats-App-Image-2024-08-26-at-01-05-14" border="1"></a>
 
 <b> CRUD Operations: </b>
 
@@ -199,6 +201,10 @@ The application follows the MVVM (Model-View-ViewModel) architecture.
 <b> Delete existing user </b>
 
 <a href="https://ibb.co/BcqxSFW"><img src="https://i.ibb.co/XjSgvM0/Whats-App-Image-2024-08-25-at-18-47-32.jpg" alt="Whats-App-Image-2024-08-25-at-18-47-32" border="1"></a>
+
+<b> Delete ALL users </b>
+
+<a href="https://ibb.co/X5jPN9y"><img src="https://i.ibb.co/JpmT0Nx/Whats-App-Image-2024-08-26-at-00-52-47.jpg" alt="Whats-App-Image-2024-08-26-at-00-52-47" border="1"></a>
 
 <b> Search users </b>
 

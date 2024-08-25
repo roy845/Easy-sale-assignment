@@ -60,9 +60,9 @@ public class MainActivity extends AppCompatActivity implements OnClickUserInterf
     MaterialButton prevButton,nextButton;
     private final Handler handler = new Handler();
     private Runnable searchRunnable;
-    private TextView emptyResultsTextView,currentPageTextView,totalPagesTextView;
+    private TextView emptyResultsTextView,currentPageTextView,totalPagesTextView,pageSeparatorTextView;
     private ImageView emptyResultsImageView;
-    private ImageButton buttonListLayout, buttonGridLayout,graphsImageButton;
+    private ImageButton buttonListLayout, buttonGridLayout,graphsImageButton,deleteAllUsersImageButton;
     private boolean isDialogShown = false;
     int CURRENT_PAGE = 1,TOTAL_PAGES = 2;
 
@@ -91,8 +91,47 @@ public class MainActivity extends AppCompatActivity implements OnClickUserInterf
         handlePrevPage();
         handleNextPage();
         observeInitialLoadingLiveData();
+        deleteAllUsersOnClickListener();
         navigateToGraphsActivity();
         navigateToAddUserActivity();
+    }
+
+    private void deleteAllUsersOnClickListener(){
+        deleteAllUsersImageButton.setOnClickListener(view->{
+            AlertDialog dialog = new AlertDialog.Builder(MainActivity.this)
+                    .setMessage(Constants.ARE_YOU_SURE_DO_YOU_WANT_TO_DELETE_ALL_USERS_PROMPT)
+                    .setView(R.layout.custom_dialog_buttons)
+                    .setCancelable(false)
+                    .create();
+
+            dialog.setOnShowListener(dialogInterface -> {
+
+                Button positiveButton = dialog.findViewById(R.id.dialog_positive_button);
+                Button negativeButton = dialog.findViewById(R.id.dialog_negative_button);
+
+                positiveButton.setOnClickListener(v -> {
+
+
+                        userViewModel.deleteAllUsers().observe(MainActivity.this, success -> {
+
+                            if (Constants.SUCCESS.equals(success)) {
+                                Toast.makeText(MainActivity.this,Constants.ALL_USERS_REMOVED_SUCCESSFULLY, Toast.LENGTH_SHORT).show();
+                                dialog.dismiss();
+                            }else {
+                                Toast.makeText(MainActivity.this, Constants.FAILED_TO_REMOVE_USERS, Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
+
+                });
+
+                negativeButton.setOnClickListener(v -> {
+                    dialog.dismiss();
+                });
+            });
+
+            dialog.show();
+        });
     }
 
     private void setCurrentPage(Integer currentPage) {
@@ -100,6 +139,11 @@ public class MainActivity extends AppCompatActivity implements OnClickUserInterf
             currentPageTextView.setText(String.valueOf(currentPage));
             prevButton.setEnabled(currentPage > 1);
             nextButton.setEnabled(currentPage < TOTAL_PAGES);
+        }
+
+        if(TOTAL_PAGES == 1){
+            prevButton.setEnabled(false);
+            nextButton.setEnabled(false);
         }
     }
 
@@ -126,7 +170,29 @@ public class MainActivity extends AppCompatActivity implements OnClickUserInterf
     private void observeTotalUserCount(){
         userViewModel.getTotalUserCount().observe(this,totalUserCount -> {
                 TOTAL_PAGES = (int) Math.ceil((double) totalUserCount / Constants.ITEMS_PER_PAGE);
+
             totalPagesTextView.setText(String.valueOf(TOTAL_PAGES));
+
+            if (CURRENT_PAGE > 0 && CURRENT_PAGE <= TOTAL_PAGES) {
+                currentPageTextView.setText(String.valueOf(CURRENT_PAGE));
+                prevButton.setEnabled(CURRENT_PAGE > 1);
+                nextButton.setEnabled(CURRENT_PAGE < TOTAL_PAGES);
+            }
+
+            if(totalUserCount == 0){
+                prevButton.setVisibility(View.GONE);
+                nextButton.setVisibility(View.GONE);
+                currentPageTextView.setVisibility(View.GONE);
+                pageSeparatorTextView.setVisibility(View.GONE);
+                totalPagesTextView.setVisibility(View.GONE);
+            }else{
+                prevButton.setVisibility(View.VISIBLE);
+                nextButton.setVisibility(View.VISIBLE);
+                currentPageTextView.setVisibility(View.VISIBLE);
+                pageSeparatorTextView.setVisibility(View.VISIBLE);
+                totalPagesTextView.setVisibility(View.VISIBLE);
+            }
+
         });
     }
 
@@ -292,9 +358,11 @@ public class MainActivity extends AppCompatActivity implements OnClickUserInterf
         layoutSwitchGroup = findViewById(R.id.layoutSwitchGroup);
         graphsImageButton = findViewById(R.id.button_graphs);
         currentPageTextView = findViewById(R.id.current_page);
+        pageSeparatorTextView = findViewById(R.id.page_separator);
         totalPagesTextView = findViewById(R.id.total_pages);
         prevButton = findViewById(R.id.button_prev);
         nextButton = findViewById(R.id.button_next);
+        deleteAllUsersImageButton = findViewById(R.id.button_deleteAll);
     }
 
     private void setupViewModel() {
@@ -364,7 +432,10 @@ public class MainActivity extends AppCompatActivity implements OnClickUserInterf
         recyclerView.setVisibility(View.GONE);
         emptyResultsTextView.setVisibility(View.GONE);
         emptyResultsImageView.setVisibility(View.GONE);
-        layoutSwitchGroup.setVisibility(View.GONE);
+        buttonListLayout.setVisibility(View.GONE);
+        buttonGridLayout.setVisibility(View.GONE);
+        graphsImageButton.setVisibility(View.GONE);
+        deleteAllUsersImageButton.setVisibility(View.GONE);
     }
 
 
@@ -391,7 +462,6 @@ public class MainActivity extends AppCompatActivity implements OnClickUserInterf
                     }else {
                         searchUsers(s.toString());
                     }
-
                 };
 
                 handler.postDelayed(searchRunnable, 500);
@@ -406,7 +476,13 @@ public class MainActivity extends AppCompatActivity implements OnClickUserInterf
     private void handleEmptyResults() {
         userAdapter.addLoadStateListener(loadStates -> {
             if (loadStates.getRefresh() instanceof LoadState.NotLoading && userAdapter.getItemCount() == 0) {
-                showNoResults();
+                if (CURRENT_PAGE > 1) {
+                    CURRENT_PAGE -= 1;
+                    setCurrentPage(CURRENT_PAGE);
+                    observeAllUsers();
+                } else {
+                    showNoResults();
+                }
             } else {
                 showResults();
             }
@@ -419,11 +495,30 @@ public class MainActivity extends AppCompatActivity implements OnClickUserInterf
         recyclerView.setVisibility(View.VISIBLE);
         emptyResultsImageView.setVisibility(View.GONE);
         emptyResultsTextView.setVisibility(View.GONE);
-        layoutSwitchGroup.setVisibility(View.VISIBLE);
-        buttonListLayout.setVisibility(View.VISIBLE);
-        buttonGridLayout.setVisibility(View.VISIBLE);
+
+        if (TOTAL_PAGES > 1) {
+            buttonListLayout.setVisibility(View.VISIBLE);
+            buttonGridLayout.setVisibility(View.VISIBLE);
+            prevButton.setVisibility(View.VISIBLE);
+            nextButton.setVisibility(View.VISIBLE);
+            currentPageTextView.setVisibility(View.VISIBLE);
+            pageSeparatorTextView.setVisibility(View.VISIBLE);
+            totalPagesTextView.setVisibility(View.VISIBLE);
+        } else {
+            buttonListLayout.setVisibility(View.VISIBLE);
+            buttonGridLayout.setVisibility(View.VISIBLE);
+            prevButton.setVisibility(View.GONE);
+            nextButton.setVisibility(View.GONE);
+            currentPageTextView.setVisibility(View.GONE);
+            pageSeparatorTextView.setVisibility(View.GONE);
+            totalPagesTextView.setVisibility(View.GONE);
+        }
+
+        deleteAllUsersImageButton.setVisibility(View.VISIBLE);
         graphsImageButton.setVisibility(View.VISIBLE);
     }
+
+
 
     private void showNoResults() {
         recyclerView.setVisibility(View.GONE);
@@ -432,8 +527,16 @@ public class MainActivity extends AppCompatActivity implements OnClickUserInterf
         emptyResultsTextView.setVisibility(View.VISIBLE);
         buttonListLayout.setVisibility(View.GONE);
         buttonGridLayout.setVisibility(View.GONE);
+        prevButton.setVisibility(View.GONE);
+        nextButton.setVisibility(View.GONE);
+        currentPageTextView.setVisibility(View.GONE);
+        pageSeparatorTextView.setVisibility(View.GONE);
+        totalPagesTextView.setVisibility(View.GONE);
+        deleteAllUsersImageButton.setVisibility(View.GONE);
         graphsImageButton.setVisibility(View.VISIBLE);
     }
+
+
 
     private void searchUsers(String query) {
 
@@ -460,9 +563,6 @@ public class MainActivity extends AppCompatActivity implements OnClickUserInterf
                                 Toast.makeText(MainActivity.this, user.getFirst_name() + " " + user.getLast_name() + " restored successfully!", Toast.LENGTH_SHORT).show();
                             }
                         });
-
-                        Toast.makeText(MainActivity.this, user.getFirst_name() + " " + user.getLast_name() + " restored successfully!", Toast.LENGTH_SHORT).show();
-
                     });
 
                     AlertDialog dialog = new AlertDialog.Builder(MainActivity.this)
@@ -484,6 +584,10 @@ public class MainActivity extends AppCompatActivity implements OnClickUserInterf
                                     if (Constants.SUCCESS.equals(success)) {
                                         Toast.makeText(MainActivity.this, user.getFirst_name() + " " + user.getLast_name() + " removed successfully!", Toast.LENGTH_SHORT).show();
                                         snackbar.show();
+                                        dialog.dismiss();
+                                    }else {
+                                        Toast.makeText(MainActivity.this, "Failed to remove " + user.getFirst_name() + " " + user.getLast_name() + ". Please try again.", Toast.LENGTH_SHORT).show();
+                                        userAdapter.notifyItemChanged(itemPosition);
                                         dialog.dismiss();
                                     }
                                 });
