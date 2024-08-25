@@ -172,9 +172,9 @@
             app:layout_constraintTop_toBottomOf="@id/recycler_view"
             app:layout_constraintVertical_bias="0.285">
 
-            <!-- "Prev" button on the left -->
+            <!-- "Next" button on the right -->
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/button_prev"
+                android:id="@+id/button_next"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:backgroundTint="?attr/colorPrimary"
@@ -220,15 +220,17 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1" />
 
-            <!-- "Next" button on the right -->
+            <!-- "Prev" button on the left -->
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/button_next"
+                android:id="@+id/button_prev"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:backgroundTint="?attr/colorPrimary"
                 app:icon="@drawable/baseline_arrow_forward_ios_24"
                 app:iconGravity="end"
                 app:iconPadding="8dp" />
+
+
 
         </LinearLayout>
 
