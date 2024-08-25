@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.lifecycle.ViewModelProvider;
 import com.example.myapplication.R;
 import com.example.myapplication.viewmodel.UserViewModel;
 import com.google.android.material.button.MaterialButton;
@@ -32,6 +33,13 @@ public class ErrorLoadingUsers extends AppCompatActivity {
             return insets;
         });
 
+        initViews();
+        setActionBar();
+        setupViewModel();
+        initRetryButtonClickListener();
+    }
+
+    private void setActionBar(){
         ActionBar actionBar = getSupportActionBar();
 
         if (actionBar != null) {
@@ -41,7 +49,6 @@ public class ErrorLoadingUsers extends AppCompatActivity {
 
             LinearLayout customActionBarView = createCustomActionBarView();
 
-            // Add the container to the ActionBar
             ActionBar.LayoutParams params = new ActionBar.LayoutParams(
                     ActionBar.LayoutParams.WRAP_CONTENT,
                     ActionBar.LayoutParams.WRAP_CONTENT,
@@ -51,10 +58,6 @@ public class ErrorLoadingUsers extends AppCompatActivity {
             actionBar.setCustomView(customActionBarView, params);
             actionBar.setDisplayShowCustomEnabled(true);
         }
-
-        initializeViews();
-        setupViewModel();
-        initRetryButtonClickListener();
     }
 
     private LinearLayout createCustomActionBarView() {
@@ -65,9 +68,7 @@ public class ErrorLoadingUsers extends AppCompatActivity {
         textView.setTextSize(18);
         textView.setGravity(Gravity.END);
 
-
         ImageView imageView = getImageView();
-
 
         LinearLayout linearLayout = new LinearLayout(this);
         linearLayout.setOrientation(LinearLayout.HORIZONTAL);
@@ -93,7 +94,7 @@ public class ErrorLoadingUsers extends AppCompatActivity {
         return imageView;
     }
 
-    private void initializeViews(){
+    private void initViews(){
         retryButton = findViewById(R.id.retry_button);
     }
 
@@ -110,7 +111,6 @@ public class ErrorLoadingUsers extends AppCompatActivity {
     }
 
     private void setupViewModel() {
-        userViewModel = UserViewModel.getInstance(getApplication());
+        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
     }
-
 }

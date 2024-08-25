@@ -189,6 +189,8 @@
                 android:layout_weight="1" />
 
             <!-- Centered text views -->
+
+
             <TextView
                 android:id="@+id/total_pages"
                 android:layout_width="wrap_content"
@@ -212,7 +214,6 @@
                 android:layout_height="wrap_content"
                 android:textColor="@android:color/white"
                 android:textSize="16sp" />
-
 
             <!-- Spacer to push the "Next" button to the right -->
             <Space

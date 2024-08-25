@@ -20,8 +20,7 @@
 - [How to Use](#how-to-use)
 - [Assumptions and Challenges](#assumptions-and-challenges)
 - [Bonus Implementations](#bonus-implementations)
-- [Testing](#testing)
-- [Future Improvements](#future-improvements)
+- [Screenshots](#screenshots)
 - [Contributing](#contributing)
 
 ## Overview
@@ -30,7 +29,7 @@ This Android application demonstrates the ability to work with RESTful APIs, loc
 
 ## Features
 
-● <b>Fetch Data from API:</b> Retrieves a list of users using the ReqRes API.
+● <b>Fetch Data from API:</b> Retrieves a list of users using the ReqRes API. <b> https://reqres.in/api/users </b>
 
 ● <b>Local Data Storage:</b> Utilizes Room to store user data locally.
 
@@ -58,7 +57,7 @@ This Android application demonstrates the ability to work with RESTful APIs, loc
 
         ● Programming Language: Java
 
-        ● Architecture: MVVM or MVP pattern
+        ● Architecture: MVVM
 
         ● Networking Library: Retrofit
 
@@ -72,9 +71,9 @@ The application follows the MVVM (Model-View-ViewModel) architecture.
 
         ● Model: Represents the data layer, interacting with Room for local data storage and Retrofit for network requests.
 
-        ● ViewModel: Handles the data preparation for the UI and manages UI-related data.
-
         ● View: Includes Activities and Fragments that display the data.
+
+        ● ViewModel: Handles the data preparation for the UI and manages UI-related data.
 
 ## Libraries Used
 
@@ -88,30 +87,30 @@ The application follows the MVVM (Model-View-ViewModel) architecture.
 
         ● Material Components: For UI components following Material Design guidelines.
 
-        ● Paging3 for pagination.
-
-        ● ViewModel Manages and holds the paginated data across configuration changes, ensuring data is only fetched and stored once, and preventing memory leaks..
+        ● ViewModel Manages and holds the paginated data across configuration changes, ensuring data is only fetched and stored once, and preventing memory leaks.
 
         ● LiveData Observes and updates the UI automatically with new data as it becomes available, ensuring the RecyclerView displays additional items as pages are loaded.
 
+        ● eazegraph for showing user related data in graphs.
+
 ## Setup Instructions
 
-1.  Clone the Repository:
+1.  <b> Clone the Repository: </b>
 
-        git clone https://github.com/roy845/Easy-sale-assignment.git
+        ● git clone https://github.com/roy845/Easy-sale-assignment.git
 
-2.  Open the Project:
+2.  <b> Open the Project: </b>
 
-    ● Open the project in Android Studio.
+        ● Open the project in Android Studio.
 
-3.  Build the Project:
+3.  <b> Build the Project: </b>
 
-    ● Ensure that all dependencies are synced by clicking on Sync Project with
-    Gradle Files.
+        ● Ensure that all dependencies are synced by clicking on Sync Project with
+        Gradle Files.
 
-    ● Build the project using Build > Make Project.
+        ● Build the project using Build > Make Project.
 
-4.  Run the Application:
+4.  <b> Run the Application: </b>
 
         ● Connect an Android device or start an emulator.
 
@@ -119,29 +118,35 @@ The application follows the MVVM (Model-View-ViewModel) architecture.
 
 ## How to Use
 
-● Fetching Users:
+<b> ● Fetching Users: </b>
 
         ● The app automatically fetches user data from the ReqRes API when launched and displays it in a RecyclerView.
 
-● Adding a User:
+<b> ● Adding a User: </b>
 
-        ● Click on the 'Add User' floating action button to open a form.
+        ● Click on the + 'Add User' floating action button to open a form.
 
         ● Enter user details and click 'Add'.
 
-● Updating a User:
+<b> ● Updating a User: </b>
 
         ● Click on a user item in the list to open the edit form.
 
         ● Update the user’s details and click 'Update'.
 
-● Deleting a User:
+<b> ● Deleting a User: </b>
 
         ● Swipe left on a user item to delete it.
+        ● A dialog will open to confirm / cancel the operation.
 
-● Searching a User:
+<b> ● Searching a User: </b>
 
         ● Searching a user using the textfield found above the recycler view.
+
+<b> ● Graph views: </b>
+
+        ● For number of new users added to the app across the month and the ability to select the 5 past months.
+        ● For daily usage in the app in minutes and the ability to select the 5 past weeks.
 
 ## Assumptions and Challenges
 
@@ -155,8 +160,6 @@ The application follows the MVVM (Model-View-ViewModel) architecture.
 
 ● Challenges:
 
-        ● Handling large data sets and pagination effectively.
-
         ● Ensuring smooth and responsive UI while performing database operations.
 
 ## Bonus Implementations
@@ -166,6 +169,44 @@ The application follows the MVVM (Model-View-ViewModel) architecture.
         ● Error Handling: Added comprehensive error handling with user-friendly messages.
 
         ● Material Design: Followed Material Design guidelines for UI/UX enhancements.
+
+## Screenshots
+
+<b> Splash screen: </b>
+
+<a href="https://ibb.co/YRTwtpY"><img src="https://i.ibb.co/M25QRMW/Whats-App-Image-2024-08-25-at-18-58-59.jpg" alt="Whats-App-Image-2024-08-25-at-18-58-59" border="1"></a>
+
+<b> Welcome dialog: </b>
+
+<a href="https://ibb.co/F7wyWz3"><img src="https://i.ibb.co/2KtC6dh/Whats-App-Image-2024-08-25-at-18-56-50.jpg" alt="Whats-App-Image-2024-08-25-at-18-56-50" border="1"></a>
+
+<b> Display list of users: </b>
+
+<a href="https://ibb.co/tBqn231"><img src="https://i.ibb.co/1ZrBXb4/Whats-App-Image-2024-08-25-at-18-33-23.jpg" alt="Whats-App-Image-2024-08-25-at-18-33-23" border="1"></a>
+
+<a href="https://ibb.co/98rH4xb"><img src="https://i.ibb.co/xC7qgn1/Whats-App-Image-2024-08-25-at-18-33-22.jpg" alt="Whats-App-Image-2024-08-25-at-18-33-22" border="1"></a>
+
+<b> CRUD Operations: </b>
+
+<b> Add new user </b>
+
+<a href="https://ibb.co/phmXFN6"><img src="https://i.ibb.co/XYwJR6f/Whats-App-Image-2024-08-25-at-18-38-52.jpg" alt="Whats-App-Image-2024-08-25-at-18-38-52" border="1"></a>
+
+<b> Update existing user </b>
+
+<a href="https://ibb.co/j9t1Q3k"><img src="https://i.ibb.co/mrpM2h5/Whats-App-Image-2024-08-25-at-18-44-53.jpg" alt="Whats-App-Image-2024-08-25-at-18-44-53" border="1"></a>
+
+<b> Delete existing user </b>
+
+<a href="https://ibb.co/BcqxSFW"><img src="https://i.ibb.co/XjSgvM0/Whats-App-Image-2024-08-25-at-18-47-32.jpg" alt="Whats-App-Image-2024-08-25-at-18-47-32" border="1"></a>
+
+<b> Search users </b>
+
+<a href="https://ibb.co/WKSXGJ7"><img src="https://i.ibb.co/12HN7WB/Whats-App-Image-2024-08-25-at-18-49-05.jpg" alt="Whats-App-Image-2024-08-25-at-18-49-05" border="1"></a>
+
+<b> Graph views </b>
+
+<a href="https://ibb.co/CBfnsdC"><img src="https://i.ibb.co/2qTjY2V/Whats-App-Image-2024-08-25-at-18-51-25.jpg" alt="Whats-App-Image-2024-08-25-at-18-51-25" border="1"></a>
 
 ## Contributing
 

@@ -1,41 +1,92 @@
 [versions]
 agp = "8.5.2"
+ambilwarna = "2.0.1"
+androidxPagingRuntime = "2.1.2"
+androidxRoomRxjava3 = "3.0.1"
+androidxRoomRxjava3Version = "2.6.1"
 converterGson = "2.9.0"
+eazegraph = "1.2.5l"
 glide = "4.15.1"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
 appcompat = "1.7.0"
+kotlinxCoroutinesAndroid = "1.6.4"
+kotlinxCoroutinesCore = "1.7.3"
+kotlinxCoroutinesCoreVersion = "1.6.4"
+lifecycleExtensions = "2.2.0"
 lifecycleViewmodel = "2.8.4"
+lifecycleViewmodelKtx = "2.5.1"
 material = "1.12.0"
 activity = "1.9.1"
 constraintlayout = "2.1.4"
 materialVersion = "1.10.0"
+mpandroidchart = "v3.1.0"
 pagingRuntime = "3.3.2"
+pagingRuntimeVersion = "3.1.1"
+pagingRxjava3 = "3.1.1"
+pagingRxjava3Version = "3.0.1"
 recyclerview = "1.3.2"
 retrofit = "2.11.0"
+roomCompiler = "2.5.0"
 roomRuntime = "2.6.1"
+roomRxjava3 = "<version>"
+roomRxjava3Version = "2.5.0"
+rxandroid = "3.0.1"
+rxandroidVersion = "3.0.0"
+rxjava = "3.1.5"
+rxjavaVersion = "3.1.3"
 
 [libraries]
+ambilwarna = { module = "com.github.yukuku:ambilwarna", version.ref = "ambilwarna" }
 compiler = { module = "com.github.bumptech.glide:compiler", version.ref = "glide" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
+eazegraph = { module = "com.github.blackfizz:eazegraph", version.ref = "eazegraph" }
 glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinxCoroutinesCore" }
+kotlinx-coroutines-android-v164 = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinxCoroutinesAndroid" }
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutinesCore" }
+kotlinx-coroutines-core-v164 = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutinesCoreVersion" }
+lifecycle-extensions = { module = "androidx.lifecycle:lifecycle-extensions", version.ref = "lifecycleExtensions" }
 lifecycle-livedata = { module = "androidx.lifecycle:lifecycle-livedata", version.ref = "lifecycleViewmodel" }
+lifecycle-livedata-ktx = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version.ref = "lifecycleViewmodelKtx" }
+lifecycle-process = { module = "androidx.lifecycle:lifecycle-process", version.ref = "lifecycleViewmodel" }
+lifecycle-reactivestreams-ktx = { module = "androidx.lifecycle:lifecycle-reactivestreams-ktx", version.ref = "lifecycleViewmodel" }
+lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycleViewmodel" }
 lifecycle-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel", version.ref = "lifecycleViewmodel" }
+lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycleViewmodel" }
+lifecycle-viewmodel-ktx-v251 = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycleViewmodelKtx" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 material-v1100 = { module = "com.google.android.material:material", version.ref = "materialVersion" }
+mpandroidchart = { module = "com.github.PhilJay:MPAndroidChart", version.ref = "mpandroidchart" }
+paging-common = { module = "androidx.paging:paging-common", version.ref = "pagingRuntime" }
 paging-runtime = { module = "androidx.paging:paging-runtime", version.ref = "pagingRuntime" }
+paging-runtime-ktx = { module = "androidx.paging:paging-runtime-ktx", version.ref = "pagingRuntimeVersion" }
+paging-runtime-v212 = { module = "androidx.paging:paging-runtime", version.ref = "androidxPagingRuntime" }
+paging-runtime-v311 = { module = "androidx.paging:paging-runtime", version.ref = "pagingRuntimeVersion" }
+paging-rxjava3 = { module = "androidx.paging:paging-rxjava3", version.ref = "pagingRuntime" }
+paging-rxjava3-v301 = { module = "androidx.paging:paging-rxjava3", version.ref = "pagingRxjava3Version" }
+paging-rxjava3-v311 = { module = "androidx.paging:paging-rxjava3", version.ref = "pagingRxjava3" }
 recyclerview = { module = "androidx.recyclerview:recyclerview", version.ref = "recyclerview" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomRuntime" }
+room-compiler-v250 = { module = "androidx.room:room-compiler", version.ref = "roomCompiler" }
 room-paging = { module = "androidx.room:room-paging", version.ref = "roomRuntime" }
 room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomRuntime" }
+room-rxjava3 = { module = "androidx.room:room-rxjava3", version.ref = "roomRxjava3" }
+room-rxjava3-v250 = { module = "androidx.room:room-rxjava3", version.ref = "roomRxjava3Version" }
+room-rxjava3-v261 = { module = "androidx.room:room-rxjava3", version.ref = "androidxRoomRxjava3Version" }
+room-rxjava3-v301 = { module = "androidx.room:room-rxjava3", version.ref = "androidxRoomRxjava3" }
+rxandroid = { module = "io.reactivex.rxjava3:rxandroid", version.ref = "rxandroid" }
+rxandroid-v300 = { module = "io.reactivex.rxjava3:rxandroid", version.ref = "rxandroidVersion" }
+rxjava = { module = "io.reactivex.rxjava3:rxjava", version.ref = "rxjava" }
+rxjava-v313 = { module = "io.reactivex.rxjava3:rxjava", version.ref = "rxjavaVersion" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

@@ -195,12 +195,11 @@
                 app:iconPadding="8dp" />
         </LinearLayout>
 
-        <!-- Line Separator -->
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@android:color/white"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="26dp"
             android:layout_marginBottom="16dp" />
 
         <!-- Label for Created At -->
@@ -210,7 +209,6 @@
             android:layout_height="wrap_content"
             android:text="@string/createdAt"
             android:textColor="@color/white"
-            android:layout_marginTop="16dp"
             android:layout_marginBottom="4dp" />
 
         <!-- EditText for Created At (disabled) -->

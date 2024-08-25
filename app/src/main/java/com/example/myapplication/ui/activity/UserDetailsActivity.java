@@ -25,12 +25,16 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import com.bumptech.glide.Glide;
 import com.example.myapplication.R;
+import com.example.myapplication.constants.Constants;
 import com.example.myapplication.models.User;
 import com.example.myapplication.utils.ValidationUtils;
 import com.example.myapplication.viewmodel.UserViewModel;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class UserDetailsActivity extends AppCompatActivity {
@@ -38,7 +42,7 @@ public class UserDetailsActivity extends AppCompatActivity {
     private ImageView userAvatarImageView,uploadIcon;
     private TextView userNameTextView;
     private Button updateButton, cancelButton;
-    private EditText userEmailEditText, firstNameEditText, lastNameEditText;
+    private EditText userEmailEditText, firstNameEditText, lastNameEditText,createdAtEditText,updatedAtEditText;
     UserViewModel usersViewModel;
     private Uri selectedImageUri;
     private TextView errorFirstNameTextView, errorLastNameTextView,errorMissingEmailTextView, errorInvalidEmailTextView,generalFeedbackTextView;
@@ -57,15 +61,39 @@ public class UserDetailsActivity extends AppCompatActivity {
             return insets;
         });
 
+            initViews();
+            setActionBar();
+            setupViewModel();
+            setGravityEditTexts();
+            restoreImageView(savedInstanceState);
+            restoreErrorTexts(savedInstanceState);
+            restoreEditTextsTexts(savedInstanceState);
+            restoreImageDialog(savedInstanceState);
+            initUploadIconClickListener();
+            initUpdateButtonClickListener();
+            navigateToMainActivity();
+
+            loadUser();
+    }
+
+    private void loadUser(){
+        if(getIntent().hasExtra(Constants.USER_MODEL)){
+            userToUpdate = getIntent().getParcelableExtra(Constants.USER_MODEL);
+
+            if(userToUpdate!=null){
+                loadUser(userToUpdate);
+            }
+        }
+    }
+
+    private void setActionBar(){
         ActionBar actionBar = getSupportActionBar();
 
         if (actionBar != null) {
 
-            actionBar.setTitle("");
-
+            actionBar.setTitle(Constants.EMPTY_STRING);
 
             LinearLayout customActionBarView = createCustomActionBarView();
-
 
             ActionBar.LayoutParams params = new ActionBar.LayoutParams(
                     ActionBar.LayoutParams.WRAP_CONTENT,
@@ -77,29 +105,7 @@ public class UserDetailsActivity extends AppCompatActivity {
             actionBar.setDisplayShowCustomEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeButtonEnabled(true);
-
         }
-
-            initViews();
-            setupViewModel();
-            setGravityEditTexts();
-            restoreImageView(savedInstanceState);
-            restoreErrorTexts(savedInstanceState);
-            restoreEditTextsTexts(savedInstanceState);
-            restoreImageDialog(savedInstanceState);
-            initUploadIconClickListener();
-            initUpdateButtonClickListener();
-            navigateToMainActivity();
-
-
-            if(getIntent().hasExtra("model")){
-                userToUpdate = getIntent().getParcelableExtra("model");
-
-                if(userToUpdate!=null){
-                    loadUser(userToUpdate);
-                }
-            }
-
     }
 
     private void loadUser(User user) {
@@ -108,6 +114,7 @@ public class UserDetailsActivity extends AppCompatActivity {
         firstNameEditText.setText(userToUpdate.getFirst_name());
         lastNameEditText.setText(userToUpdate.getLast_name());
         userEmailEditText.setText(userToUpdate.getEmail());
+
         initUserAvatarClickListener(userToUpdate.getAvatar());
 
         if(selectedImageUri!=null) {
@@ -124,22 +131,32 @@ public class UserDetailsActivity extends AppCompatActivity {
                     .into(userAvatarImageView);
             initUserAvatarClickListener(userToUpdate.getAvatar());
         }
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+
+        if (userToUpdate.getCreatedAt() != null) {
+            createdAtEditText.setText(dateFormat.format(userToUpdate.getCreatedAt()));
+        }
+
+        if (userToUpdate.getUpdatedAt() != null) {
+            updatedAtEditText.setText(dateFormat.format(userToUpdate.getUpdatedAt()));
+        }
     }
 
     private void restoreImageDialog(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
-            boolean wasDialogShowing = savedInstanceState.getBoolean("isDialogShowing", false);
-            String imageSourceType = savedInstanceState.getString("imageSourceType");
+            boolean wasDialogShowing = savedInstanceState.getBoolean(Constants.IS_DIALOG_SHOWING, false);
+            String imageSourceType = savedInstanceState.getString(Constants.IMAGE_SOURCE_TYPE);
 
             if (wasDialogShowing && imageSourceType != null) {
-                if ("uri".equals(imageSourceType)) {
-                    String uriString = savedInstanceState.getString("selectedImageUri");
+                if (Constants.URI_STRING.equals(imageSourceType)) {
+                    String uriString = savedInstanceState.getString(Constants.SELECTED_IMAGE_URI);
                     if (uriString != null) {
                         Uri imageUri = Uri.parse(uriString);
                         createDialog(imageUri);
                     }
-                } else if ("string".equals(imageSourceType)) {
-                    String imageString = savedInstanceState.getString("selectedImageString");
+                } else if (Constants.STRING.equals(imageSourceType)) {
+                    String imageString = savedInstanceState.getString(Constants.SELECTED_IMAGE_STRING);
                     if (imageString != null) {
                         createDialog(imageString);
                     }
@@ -169,45 +186,53 @@ public class UserDetailsActivity extends AppCompatActivity {
         errorMissingEmailTextView =findViewById(R.id.error_label_email_missing_update_user);
         errorInvalidEmailTextView = findViewById(R.id.error_label_email_update_user);
         generalFeedbackTextView = findViewById(R.id.general_feedback_text_update_user);
+        createdAtEditText = findViewById(R.id.edit_text_created_at);
+        updatedAtEditText = findViewById(R.id.edit_text_updated_at);
     }
 
-    private void setGravityEditTexts(){
+    private void setGravityEditTexts() {
+
+        userEmailEditText.setTextDirection(View.TEXT_DIRECTION_LTR);
+        firstNameEditText.setTextDirection(View.TEXT_DIRECTION_LTR);
+        lastNameEditText.setTextDirection(View.TEXT_DIRECTION_LTR);
+
         userEmailEditText.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
-        userEmailEditText.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_END);
-
         firstNameEditText.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
-        firstNameEditText.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_END);
-
         lastNameEditText.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
-        lastNameEditText.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_END);
+
+        createdAtEditText.setTextDirection(View.TEXT_DIRECTION_LTR);
+        createdAtEditText.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
+
+        updatedAtEditText.setTextDirection(View.TEXT_DIRECTION_LTR);
+        updatedAtEditText.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
     }
 
     private void restoreErrorTexts(@Nullable Bundle savedInstanceState) {
         if (savedInstanceState != null) {
 
             if (errorMissingEmailTextView != null) {
-                errorMissingEmailTextView.setVisibility(savedInstanceState.getInt("errorMissingEmailVisibility"));
+                errorMissingEmailTextView.setVisibility(savedInstanceState.getInt(Constants.ERROR_MISSING_EMAIL_VISIBILITY));
             }
             if (errorInvalidEmailTextView != null) {
-                errorInvalidEmailTextView.setVisibility(savedInstanceState.getInt("errorInvalidEmailVisibility"));
+                errorInvalidEmailTextView.setVisibility(savedInstanceState.getInt(Constants.ERROR_INVALID_EMAIL_VISIBILITY));
             }
             if (errorFirstNameTextView != null) {
-                errorFirstNameTextView.setVisibility(savedInstanceState.getInt("errorFirstNameVisibility"));
+                errorFirstNameTextView.setVisibility(savedInstanceState.getInt(Constants.ERROR_FIRST_NAME_VISIBILITY));
             }
             if (errorLastNameTextView != null) {
-                errorLastNameTextView.setVisibility(savedInstanceState.getInt("errorLastNameVisibility"));
+                errorLastNameTextView.setVisibility(savedInstanceState.getInt(Constants.ERROR_LAST_NAME_VISIBILITY));
             }
 
             if (generalFeedbackTextView != null) {
-                generalFeedbackTextView.setVisibility(savedInstanceState.getInt("generalFeedbackVisibility"));
-                generalFeedbackTextView.setText(savedInstanceState.getString("generalFeedbackText"));
+                generalFeedbackTextView.setVisibility(savedInstanceState.getInt(Constants.ERROR_GENERAL_FEEDBACK_VISIBILITY));
+                generalFeedbackTextView.setText(savedInstanceState.getString(Constants.ERROR_GENERAL_FEEDBACK_TEXT));
             }
         }
     }
 
     private void restoreImageView(@Nullable Bundle savedInstanceState){
         if (savedInstanceState != null) {
-            String uriString = savedInstanceState.getString("selectedImageUri");
+            String uriString = savedInstanceState.getString(Constants.SELECTED_IMAGE_URI);
             if (uriString != null) {
                 selectedImageUri = Uri.parse(uriString);
                 Glide.with(this)
@@ -219,9 +244,9 @@ public class UserDetailsActivity extends AppCompatActivity {
 
     private void restoreEditTextsTexts(@Nullable Bundle savedInstanceState){
         if (savedInstanceState != null) {
-            userEmailEditText.setText(savedInstanceState.getString("email", ""));
-            firstNameEditText.setText(savedInstanceState.getString("firstName", ""));
-            lastNameEditText.setText(savedInstanceState.getString("lastName", ""));
+            userEmailEditText.setText(savedInstanceState.getString(Constants.EMAIL, Constants.EMPTY_STRING));
+            firstNameEditText.setText(savedInstanceState.getString(Constants.FIRST_NAME, Constants.EMPTY_STRING));
+            lastNameEditText.setText(savedInstanceState.getString(Constants.LAST_NAME, Constants.EMPTY_STRING));
         }
     }
 
@@ -230,33 +255,33 @@ public class UserDetailsActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
 
 
-        outState.putInt("errorMissingEmailVisibility", errorMissingEmailTextView.getVisibility());
-        outState.putInt("errorInvalidEmailVisibility", errorInvalidEmailTextView.getVisibility());
-        outState.putInt("errorFirstNameVisibility", errorFirstNameTextView.getVisibility());
-        outState.putInt("errorLastNameVisibility", errorLastNameTextView.getVisibility());
+        outState.putInt(Constants.ERROR_MISSING_EMAIL_VISIBILITY, errorMissingEmailTextView.getVisibility());
+        outState.putInt(Constants.ERROR_INVALID_EMAIL_VISIBILITY, errorInvalidEmailTextView.getVisibility());
+        outState.putInt(Constants.ERROR_FIRST_NAME_VISIBILITY, errorFirstNameTextView.getVisibility());
+        outState.putInt(Constants.ERROR_LAST_NAME_VISIBILITY, errorLastNameTextView.getVisibility());
 
 
-        outState.putInt("generalFeedbackVisibility", generalFeedbackTextView.getVisibility());
-        outState.putString("generalFeedbackText", generalFeedbackTextView.getText().toString());
+        outState.putInt(Constants.ERROR_GENERAL_FEEDBACK_VISIBILITY, generalFeedbackTextView.getVisibility());
+        outState.putString(Constants.ERROR_GENERAL_FEEDBACK_TEXT, generalFeedbackTextView.getText().toString());
 
-        outState.putString("email", userEmailEditText.getText().toString());
-        outState.putString("firstName", firstNameEditText.getText().toString());
-        outState.putString("lastName", lastNameEditText.getText().toString());
+        outState.putString(Constants.EMAIL, userEmailEditText.getText().toString());
+        outState.putString(Constants.FIRST_NAME, firstNameEditText.getText().toString());
+        outState.putString(Constants.LAST_NAME, lastNameEditText.getText().toString());
 
         if (selectedImageUri != null) {
-            outState.putString("selectedImageUri", selectedImageUri.toString());
-            outState.putString("imageSourceType", "uri");
+            outState.putString(Constants.SELECTED_IMAGE_URI, selectedImageUri.toString());
+            outState.putString(Constants.IMAGE_SOURCE_TYPE, Constants.URI_STRING);
         } else if (userToUpdate != null && userToUpdate.getAvatar() != null) {
-            outState.putString("selectedImageString", userToUpdate.getAvatar());
-            outState.putString("imageSourceType", "string");
+            outState.putString(Constants.SELECTED_IMAGE_STRING, userToUpdate.getAvatar());
+            outState.putString(Constants.IMAGE_SOURCE_TYPE, Constants.STRING);
         }
 
-        outState.putBoolean("isDialogShowing", imageDialog != null && imageDialog.isShowing());
+        outState.putBoolean(Constants.IS_DIALOG_SHOWING, imageDialog != null && imageDialog.isShowing());
     }
 
 
     private void setupViewModel() {
-        usersViewModel = UserViewModel.getInstance(getApplication());
+        usersViewModel = new ViewModelProvider(this).get(UserViewModel.class);
     }
 
     private LinearLayout createCustomActionBarView() {
@@ -268,7 +293,6 @@ public class UserDetailsActivity extends AppCompatActivity {
         textView.setGravity(Gravity.END);
 
         ImageView imageView = getImageView();
-
 
         LinearLayout linearLayout = new LinearLayout(this);
         linearLayout.setOrientation(LinearLayout.HORIZONTAL);
@@ -341,23 +365,21 @@ public class UserDetailsActivity extends AppCompatActivity {
     }
 
     private void initUploadIconClickListener() {
-        uploadIcon.setOnClickListener(v -> {
-            pickMedia.launch(new PickVisualMediaRequest.Builder()
-                    .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
-                    .build());
-        });
+        uploadIcon.setOnClickListener(v -> pickMedia.launch(new PickVisualMediaRequest.Builder()
+                .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
+                .build()));
     }
 
     private void showEmailExistsError(String email) {
         generalFeedbackTextView.setVisibility(View.VISIBLE);
-        generalFeedbackTextView.setText(String.format("*User with this email: %s already exists", email));
+        generalFeedbackTextView.setText(String.format(Constants.USER_ALREADY_EXISTS, email));
         Toast.makeText(UserDetailsActivity.this, "Error: Email " + email + " already exists", Toast.LENGTH_SHORT).show();
     }
 
     private void showUnexpectedError(){
         generalFeedbackTextView.setVisibility(View.VISIBLE);
         generalFeedbackTextView.setText(R.string.unexpected_error_occured);
-        Toast.makeText(UserDetailsActivity.this, "*An unexpected error occurred", Toast.LENGTH_SHORT).show();
+        Toast.makeText(UserDetailsActivity.this, Constants.UNEXPECTED_ERROR_OCCURRED, Toast.LENGTH_SHORT).show();
     }
 
 
@@ -402,7 +424,7 @@ public class UserDetailsActivity extends AppCompatActivity {
                 }
 
                 if (hasError.get()) {
-                    Toast.makeText(this, "Please correct the errors and try again.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, Constants.CORRECT_ERRORS_AND_TRY_AGAIN, Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -411,23 +433,21 @@ public class UserDetailsActivity extends AppCompatActivity {
                 userToUpdate.setEmail(email);
 
                 if (selectedImageUri != null) {
-                    System.out.println("sdfsdf: " + selectedImageUri);
                     userToUpdate.setAvatar(selectedImageUri.toString());
                 }
 
+                userToUpdate.setUpdatedAt(new Date());
+
                 LiveData<String> result = usersViewModel.updateUser(userToUpdate);
 
-                result.observe(this, new Observer<String>() {
-                    @Override
-                    public void onChanged(String result) {
-                        if ("success".equals(result)) {
-                            Toast.makeText(UserDetailsActivity.this, "User " + firstName + " " + lastName + " updated successfully", Toast.LENGTH_SHORT).show();
-                            finish();
-                        } else if ("constraint_failure".equals(result)) {
-                            showEmailExistsError(email);
-                        } else {
-                            showUnexpectedError();
-                        }
+                result.observe(this, result1 -> {
+                    if (Constants.SUCCESS.equals(result1)) {
+                        Toast.makeText(UserDetailsActivity.this, "User " + firstName + " " + lastName + " updated successfully", Toast.LENGTH_SHORT).show();
+                        finish();
+                    } else if (Constants.CONSTRAINT_FAILURE.equals(result1)) {
+                        showEmailExistsError(email);
+                    } else {
+                        showUnexpectedError();
                     }
                 });
             }
@@ -436,9 +456,7 @@ public class UserDetailsActivity extends AppCompatActivity {
 
 
     private void navigateToMainActivity(){
-        cancelButton.setOnClickListener(v -> {
-            finish();
-        });
+        cancelButton.setOnClickListener(v -> finish());
     }
 
     ActivityResultLauncher<PickVisualMediaRequest> pickMedia =
@@ -452,7 +470,7 @@ public class UserDetailsActivity extends AppCompatActivity {
                     initUserAvatarClickListener(selectedImageUri);
 
                 } else {
-                    Toast.makeText(UserDetailsActivity.this, "No media selected", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(UserDetailsActivity.this, Constants.NO_MEDIA_SELECTED, Toast.LENGTH_SHORT).show();
                 }
             });
 }

@@ -50,18 +50,6 @@
             android:textColor="@android:color/white"
             android:layout_marginTop="16dp"/>
 
-        <!-- Let's Go Button -->
-        <Button
-            android:id="@+id/btn_lets_go"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/lets_go"
-            app:iconGravity="end"
-            app:icon="@drawable/baseline_arrow_forward_24"
-            android:backgroundTint="@android:color/holo_green_light"
-            android:textColor="@android:color/white"
-            android:layout_marginTop="16dp"/>
-
         <!-- Learn More Button -->
         <Button
             android:id="@+id/btn_learn_more"

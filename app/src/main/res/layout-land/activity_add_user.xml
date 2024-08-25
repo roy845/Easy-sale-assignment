@@ -58,44 +58,6 @@
             android:layout_gravity="center"
             android:text="@string/error_missing_avatar" />
 
-        <!-- Label for Email -->
-        <TextView
-            android:id="@+id/label_email"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/label_email_edit_text_hint"
-            android:textColor="@color/white"
-            android:layout_marginBottom="4dp" />
-
-        <!-- EditText for Email -->
-        <EditText
-            android:id="@+id/add_edit_text_email"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:hint="@string/email_edit_text_hint"
-            android:background="@drawable/edit_text_border"
-            android:textColor="@color/white"
-            android:inputType="textEmailAddress"
-            android:textColorHint="@color/white"
-            android:padding="8dp"
-            android:layout_marginBottom="8dp" />
-
-        <!-- Error Label for Email -->
-        <TextView
-            android:id="@+id/error_label_email"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@android:color/holo_red_dark"
-            android:visibility="gone"
-            android:text="@string/error_invalid_email" />
-
-        <TextView
-            android:id="@+id/error_label_email_missing"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@android:color/holo_red_dark"
-            android:visibility="gone"
-            android:text="@string/error_missing_email" />
 
         <!-- Label for First Name -->
         <TextView
@@ -157,6 +119,45 @@
             android:textColor="@android:color/holo_red_dark"
             android:visibility="gone"
             android:text="@string/error_invalid_lastname" />
+
+        <!-- Label for Email -->
+        <TextView
+            android:id="@+id/label_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/label_email_edit_text_hint"
+            android:textColor="@color/white"
+            android:layout_marginBottom="4dp" />
+
+        <!-- EditText for Email -->
+        <EditText
+            android:id="@+id/add_edit_text_email"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="@string/email_edit_text_hint"
+            android:background="@drawable/edit_text_border"
+            android:textColor="@color/white"
+            android:inputType="textEmailAddress"
+            android:textColorHint="@color/white"
+            android:padding="8dp"
+            android:layout_marginBottom="8dp" />
+
+        <!-- Error Label for Email -->
+        <TextView
+            android:id="@+id/error_label_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/holo_red_dark"
+            android:visibility="gone"
+            android:text="@string/error_invalid_email" />
+
+        <TextView
+            android:id="@+id/error_label_email_missing"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/holo_red_dark"
+            android:visibility="gone"
+            android:text="@string/error_missing_email" />
 
         <!-- General Feedback TextView -->
         <TextView

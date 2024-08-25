@@ -18,8 +18,8 @@ public class SplashScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash_screen);
 
-        hideActionBar();
         loadGif();
+        hideActionBar();
         scheduleTransitionToMainActivity();
     }
 

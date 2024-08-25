@@ -9,9 +9,9 @@
     <string name="no_users_found">No users found!</string>
     <string name="something_went_wrong">Something went wrong!</string>
     <string name="error_image_description">Error Image description</string>
-    <string name="email_edit_text_hint">Email</string>
-    <string name="firstname_edit_text_hint">First Name</string>
-    <string name="lastname_edit_text_hint">Last Name</string>
+    <string name="email_edit_text_hint">Enter Your Email</string>
+    <string name="firstname_edit_text_hint">Enter Your First Name</string>
+    <string name="lastname_edit_text_hint">Enter Your Last Name</string>
     <string name="label_email_edit_text_hint">Email</string>
     <string name="label_firstname_edit_text_hint">First Name</string>
     <string name="label_lastname_edit_text_hint">Last Name</string>
@@ -31,7 +31,7 @@
     <string name="update_user_title">Edit User</string>
     <string name="load_more_btn_txt">Load</string>
     <string name="error_loading_users_title">Error Loading Users</string>
-    <string name="welcome_dialog_message">Welcome to <b>Easy-Sale User Management!</b><br/><br/>
+    <string name="welcome_dialog_message">Welcome to <b>Easy-Sale User Management!</b><br /><br />
     Manage your users effortlessly with our easy-to-use application.\n\nHere’s what you can do:\n\n
     <b>● View Users:</b> Browse through the list of users fetched directly from the ReqRes API.\n\n
     <b>● Add New Users:</b> Easily add new users to your list with just a few clicks.\n\n
@@ -46,8 +46,19 @@
     <string name="lets_go">Let’s Go</string>
     <string name="dialogImageRecyclerView">dialog Image Recycler View</string>
     <string name="infoIconRecyclerView">info Icon Recycler View</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
+    <string name="switch_to_list">Switch to list view</string>
+    <string name="switch_to_grid">Switch to grid view</string>
     <string name="unexpected_error_occured">*An unexpected error occurred</string>
+    <string name="createdAt">Created At</string>
+    <string name ="updatedAt">Updated At</string>
+    <string name ="graphs">Graphs</string>
+    <string name ="new_users_graph_y_axis">New Users</string>
+    <string name ="daily_usage_graph_y_axis">Usage in minutes</string>
+    <string name ="new_users_graph_header"> New Users Per Month</string>
+    <string name ="daily_usage_graph_header"> Daily usage in minutes</string>
+    <string name="select_week_placeholder">Select a week</string>
+    <string name="no_results_found">No Results Found</string>
+    <string name="color_picker">Color Picker</string>
+    <string name="slash">/</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

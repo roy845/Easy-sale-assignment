@@ -1,6 +1,7 @@
 package com.example.myapplication.ui.activity;
 
 
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -16,6 +17,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -30,19 +32,21 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.paging.LoadState;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.myapplication.R;
 import com.example.myapplication.adapter.SwipeToDeleteCallback;
 import com.example.myapplication.adapter.UserAdapter;
+import com.example.myapplication.constants.Constants;
 import com.example.myapplication.interfaces.OnClickUserInterface;
 import com.example.myapplication.models.User;
 import com.example.myapplication.viewmodel.UserViewModel;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import android.net.Uri;
-
 
 
 public class MainActivity extends AppCompatActivity implements OnClickUserInterface {
@@ -51,14 +55,16 @@ public class MainActivity extends AppCompatActivity implements OnClickUserInterf
     private UserAdapter userAdapter;
     ProgressBar progressBar,progressBarLoadingInitialUsers;
     EditText searchEditText;
+    LinearLayout layoutSwitchGroup;
     FloatingActionButton floatingActionButton;
+    MaterialButton prevButton,nextButton;
     private final Handler handler = new Handler();
     private Runnable searchRunnable;
-    private TextView emptyResultsTextView;
+    private TextView emptyResultsTextView,currentPageTextView,totalPagesTextView;
     private ImageView emptyResultsImageView;
-    private static final String PREFS_NAME = "MyPrefsFile";
-    private static final String PREF_DONT_SHOW_AGAIN = "dont_show_again";
+    private ImageButton buttonListLayout, buttonGridLayout,graphsImageButton;
     private boolean isDialogShown = false;
+    int CURRENT_PAGE = 1,TOTAL_PAGES = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,14 +77,117 @@ public class MainActivity extends AppCompatActivity implements OnClickUserInterf
             return insets;
         });
 
+        initViews();
+        setActionBar();
+        setupViewModel();
+        initRecyclerViewAndAdapter();
+        observeAllUsers();
+        observeTotalUserCount();
+        setupEditTextSearch();
+        observeErrorLiveData();
+        setupLayoutSwitchButtons();
+        enableSwipeToDeleteAndUndo();
+        setCurrentPage(1);
+        handlePrevPage();
+        handleNextPage();
+        observeInitialLoadingLiveData();
+        navigateToGraphsActivity();
+        navigateToAddUserActivity();
+    }
+
+    private void setCurrentPage(Integer currentPage) {
+        if (currentPage > 0 && currentPage <= TOTAL_PAGES) {
+            currentPageTextView.setText(String.valueOf(currentPage));
+            prevButton.setEnabled(currentPage > 1);
+            nextButton.setEnabled(currentPage < TOTAL_PAGES);
+        }
+    }
+
+    private void handleNextPage() {
+        nextButton.setOnClickListener(view -> {
+            if (CURRENT_PAGE < TOTAL_PAGES) {
+                CURRENT_PAGE += 1;
+                setCurrentPage(CURRENT_PAGE);
+                observeAllUsers();
+            }
+        });
+    }
+
+    private void handlePrevPage() {
+        prevButton.setOnClickListener(view -> {
+            if (CURRENT_PAGE > 1) {
+                CURRENT_PAGE -= 1;
+                setCurrentPage(CURRENT_PAGE);
+                observeAllUsers();
+            }
+        });
+    }
+
+    private void observeTotalUserCount(){
+        userViewModel.getTotalUserCount().observe(this,totalUserCount -> {
+                TOTAL_PAGES = (int) Math.ceil((double) totalUserCount / Constants.ITEMS_PER_PAGE);
+            totalPagesTextView.setText(String.valueOf(TOTAL_PAGES));
+        });
+    }
+
+    private void navigateToGraphsActivity(){
+        graphsImageButton.setOnClickListener(view -> startActivity(new Intent(MainActivity.this, GraphsActivity.class)));
+    }
+
+    private void setupLayoutSwitchButtons() {
+        buttonListLayout.setOnClickListener(v -> {
+            switchToLinearLayout();
+            saveLayoutChoice(Constants.LAYOUT_LIST);
+        });
+
+        buttonGridLayout.setOnClickListener(v -> {
+            switchToGridLayout();
+            saveLayoutChoice(Constants.LAYOUT_GRID);
+        });
+
+        String savedLayout = getSavedLayoutChoice();
+        if (Constants.LAYOUT_GRID.equals(savedLayout)) {
+            switchToGridLayout();
+        } else {
+            switchToLinearLayout();
+        }
+    }
+
+    private void saveLayoutChoice(String layout) {
+        SharedPreferences.Editor editor = getSharedPreferences(Constants.PREFS_NAME, MODE_PRIVATE).edit();
+        editor.putString(Constants.PREF_LAYOUT_TYPE, layout);
+        editor.apply();
+    }
+
+    private String getSavedLayoutChoice() {
+        SharedPreferences prefs = getSharedPreferences(Constants.PREFS_NAME, MODE_PRIVATE);
+        return prefs.getString(Constants.PREF_LAYOUT_TYPE, Constants.LAYOUT_LIST); // Default is list layout
+    }
+
+    private void switchToLinearLayout() {
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        buttonListLayout.setBackgroundColor(Color.WHITE);
+        buttonListLayout.setColorFilter(Color.BLACK);
+        buttonGridLayout.setBackgroundColor(Color.TRANSPARENT);
+        buttonGridLayout.setColorFilter(Color.WHITE);
+    }
+
+    private void switchToGridLayout() {
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+        buttonGridLayout.setBackgroundColor(Color.WHITE);
+        buttonGridLayout.setColorFilter(Color.BLACK);
+        buttonListLayout.setBackgroundColor(Color.TRANSPARENT);
+        buttonListLayout.setColorFilter(Color.WHITE);
+    }
+
+    private void setActionBar(){
         ActionBar actionBar = getSupportActionBar();
 
         if (actionBar != null) {
 
-            actionBar.setTitle("");
+            actionBar.setTitle(Constants.EMPTY_STRING);
 
             LinearLayout customActionBarView = createCustomActionBarView();
-
 
             ActionBar.LayoutParams params = new ActionBar.LayoutParams(
                     ActionBar.LayoutParams.WRAP_CONTENT,
@@ -89,17 +198,7 @@ public class MainActivity extends AppCompatActivity implements OnClickUserInterf
             actionBar.setCustomView(customActionBarView, params);
             actionBar.setDisplayShowCustomEnabled(true);
         }
-
-        initViews();
-        setupViewModel();
-        observePagedUsers();
-        setupEditTextSearch();
-        observeErrorLiveData();
-        enableSwipeToDeleteAndUndo();
-        observeInitialLoadingLiveData();
-        navigateToAddUserActivity();
     }
-
 
     private void observeInitialLoadingLiveData(){
         userViewModel.getLoadingInitialUsers().observe(MainActivity.this,isLoadingUsers->{
@@ -115,7 +214,6 @@ public class MainActivity extends AppCompatActivity implements OnClickUserInterf
 
     public void observeErrorLiveData(){
         userViewModel.getErrorLiveData().observe(this, error -> {
-            System.out.println("error : "+error);
             if(error){
                 navigateToErrorActivity();
             }else {
@@ -129,8 +227,8 @@ public class MainActivity extends AppCompatActivity implements OnClickUserInterf
     }
 
     private boolean shouldShowWelcomeDialog() {
-        SharedPreferences sharedPreferences = this.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-        return !sharedPreferences.getBoolean(PREF_DONT_SHOW_AGAIN, false);
+        SharedPreferences sharedPreferences = this.getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE);
+        return !sharedPreferences.getBoolean(Constants.PREF_DONT_SHOW_AGAIN, false);
     }
 
     private void checkAndShowWelcomeDialog() {
@@ -152,32 +250,21 @@ public class MainActivity extends AppCompatActivity implements OnClickUserInterf
         CheckBox checkboxDontShow = dialogView.findViewById(R.id.checkbox_dont_show);
         Button btnOk = dialogView.findViewById(R.id.btn_ok);
         Button learnMoreBtn = dialogView.findViewById(R.id.btn_learn_more);
-        Button letsGoBtn = dialogView.findViewById(R.id.btn_lets_go);
 
         btnOk.setOnClickListener(v -> {
 
             if (checkboxDontShow.isChecked()) {
-                SharedPreferences.Editor editor = this.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).edit();
-                editor.putBoolean(PREF_DONT_SHOW_AGAIN, true);
+                SharedPreferences.Editor editor = this.getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE).edit();
+                editor.putBoolean(Constants.PREF_DONT_SHOW_AGAIN, true);
                 editor.apply();
             }
 
-            alertDialog.dismiss();
-        });
-
-        letsGoBtn.setOnClickListener(v -> {
-
-            if (checkboxDontShow.isChecked()) {
-                SharedPreferences.Editor editor = this.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).edit();
-                editor.putBoolean(PREF_DONT_SHOW_AGAIN, true);
-                editor.apply();
-            }
             alertDialog.dismiss();
         });
 
         learnMoreBtn.setOnClickListener(v -> {
 
-            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://easy-sale.co.il/"));
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(Constants.EASY_SALE_URL));
             startActivity(browserIntent);
             alertDialog.dismiss();
         });
@@ -185,28 +272,39 @@ public class MainActivity extends AppCompatActivity implements OnClickUserInterf
         alertDialog.show();
     }
 
+    private void initRecyclerViewAndAdapter(){
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        userAdapter = new UserAdapter(UserAdapter.DIFF_CALLBACK,this);
+        recyclerView.setAdapter(userAdapter);
+    }
+
     private void initViews(){
         floatingActionButton = findViewById(R.id.fab_add_user);
         recyclerView = findViewById(R.id.recycler_view);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        userAdapter = new UserAdapter(UserAdapter.DIFF_CALLBACK,this);
-        recyclerView.setAdapter(userAdapter);
         searchEditText = findViewById(R.id.editSearch);
         progressBar = findViewById(R.id.progressBarId);
         progressBarLoadingInitialUsers = findViewById(R.id.progressBarLoadingInitialUsers);
         emptyResultsImageView = findViewById(R.id.empty_results_image);
         emptyResultsTextView = findViewById(R.id.empty_results_text);
+        buttonListLayout = findViewById(R.id.button_list_layout);
+        buttonGridLayout = findViewById(R.id.button_grid_layout);
+        layoutSwitchGroup = findViewById(R.id.layoutSwitchGroup);
+        graphsImageButton = findViewById(R.id.button_graphs);
+        currentPageTextView = findViewById(R.id.current_page);
+        totalPagesTextView = findViewById(R.id.total_pages);
+        prevButton = findViewById(R.id.button_prev);
+        nextButton = findViewById(R.id.button_next);
     }
 
     private void setupViewModel() {
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
     }
 
-    private void observePagedUsers(){
-        userViewModel.getPagedUsers().observe(this, usersList -> {
-            userAdapter.submitData(getLifecycle(),usersList);
-            handleEmptyResults();
-
+    private void observeAllUsers(){
+         userViewModel.loadUsersByPage((CURRENT_PAGE-1)*Constants.ITEMS_PER_PAGE,Constants.ITEMS_PER_PAGE).observe(this,users -> {
+             userAdapter.submitData(getLifecycle(),users);
+             handleEmptyResults();
         });
     }
 
@@ -216,16 +314,32 @@ public class MainActivity extends AppCompatActivity implements OnClickUserInterf
         textView.setText(R.string.app_name);
         textView.setTextColor(Color.WHITE);
         textView.setTextSize(18);
-        textView.setGravity(Gravity.END);
-
+        textView.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
 
         ImageView imageView = getImageView();
 
+
         LinearLayout linearLayout = new LinearLayout(this);
         linearLayout.setOrientation(LinearLayout.HORIZONTAL);
-        linearLayout.setGravity(Gravity.END | Gravity.CENTER_VERTICAL);
-        linearLayout.addView(imageView);
+        linearLayout.setGravity(Gravity.CENTER_VERTICAL);
+        linearLayout.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+
+        LinearLayout.LayoutParams textParams = new LinearLayout.LayoutParams(
+                0,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                1.0f
+        );
+        textView.setLayoutParams(textParams);
+
+        LinearLayout.LayoutParams imageParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        imageParams.setMargins(16, 0, 0, 0);
+        imageView.setLayoutParams(imageParams);
+
         linearLayout.addView(textView);
+        linearLayout.addView(imageView);
 
         return linearLayout;
     }
@@ -239,9 +353,18 @@ public class MainActivity extends AppCompatActivity implements OnClickUserInterf
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
         imageParams.setMargins(16, 0, 0, 0);
-
         imageView.setLayoutParams(imageParams);
+
         return imageView;
+    }
+
+
+    private void showLoadingState() {
+        progressBar.setVisibility(View.VISIBLE);
+        recyclerView.setVisibility(View.GONE);
+        emptyResultsTextView.setVisibility(View.GONE);
+        emptyResultsImageView.setVisibility(View.GONE);
+        layoutSwitchGroup.setVisibility(View.GONE);
     }
 
 
@@ -254,22 +377,21 @@ public class MainActivity extends AppCompatActivity implements OnClickUserInterf
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                progressBar.setVisibility(View.VISIBLE);
-                recyclerView.setVisibility(View.GONE);
-                emptyResultsTextView.setVisibility(View.GONE);
-                emptyResultsImageView.setVisibility(View.GONE);
-
+                showLoadingState();
 
                 if (searchRunnable != null) {
                     handler.removeCallbacks(searchRunnable);
                 }
 
                 searchRunnable = () -> {
-                    if (s.toString().trim().isEmpty()) {
-                        observePagedUsers();
-                    } else {
+                    CURRENT_PAGE = 1;
+                    setCurrentPage(CURRENT_PAGE);
+                    if(s.toString().isEmpty()){
+                        observeAllUsers();
+                    }else {
                         searchUsers(s.toString());
                     }
+
                 };
 
                 handler.postDelayed(searchRunnable, 500);
@@ -297,19 +419,27 @@ public class MainActivity extends AppCompatActivity implements OnClickUserInterf
         recyclerView.setVisibility(View.VISIBLE);
         emptyResultsImageView.setVisibility(View.GONE);
         emptyResultsTextView.setVisibility(View.GONE);
+        layoutSwitchGroup.setVisibility(View.VISIBLE);
+        buttonListLayout.setVisibility(View.VISIBLE);
+        buttonGridLayout.setVisibility(View.VISIBLE);
+        graphsImageButton.setVisibility(View.VISIBLE);
     }
 
     private void showNoResults() {
         recyclerView.setVisibility(View.GONE);
+        progressBar.setVisibility(View.GONE);
         emptyResultsImageView.setVisibility(View.VISIBLE);
         emptyResultsTextView.setVisibility(View.VISIBLE);
+        buttonListLayout.setVisibility(View.GONE);
+        buttonGridLayout.setVisibility(View.GONE);
+        graphsImageButton.setVisibility(View.VISIBLE);
     }
 
     private void searchUsers(String query) {
-        userViewModel.searchPagedUsers(query).observe(this, pagingData -> {
-            userAdapter.submitData(getLifecycle(), pagingData);
-            handleEmptyResults();
 
+        userViewModel.searchUsersWithPagination(query,(CURRENT_PAGE-1)*Constants.ITEMS_PER_PAGE,Constants.ITEMS_PER_PAGE).observe(this, usersData -> {
+            userAdapter.submitData(getLifecycle(),usersData);
+            handleEmptyResults();
         });
     }
 
@@ -318,15 +448,15 @@ public class MainActivity extends AppCompatActivity implements OnClickUserInterf
         SwipeToDeleteCallback swipeToDeleteCallback = new SwipeToDeleteCallback(MainActivity.this) {
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                int itemPosition = viewHolder.getAdapterPosition();
+                int itemPosition = viewHolder.getAbsoluteAdapterPosition();
                 User user = userAdapter.getUser(itemPosition);
                 if(direction == ItemTouchHelper.LEFT) {
 
                     Snackbar snackbar = Snackbar.make(viewHolder.itemView,"You removed "+user.getFirst_name() + " " + user.getLast_name(),Snackbar.LENGTH_LONG);
-                    snackbar.setAction("UNDO", v -> {
+                    snackbar.setAction(Constants.UNDO, v -> {
 
                         userViewModel.insertUser(user).observe(MainActivity.this, success -> {
-                            if ("success".equals(success)) {
+                            if (Constants.SUCCESS.equals(success)) {
                                 Toast.makeText(MainActivity.this, user.getFirst_name() + " " + user.getLast_name() + " restored successfully!", Toast.LENGTH_SHORT).show();
                             }
                         });
@@ -337,7 +467,7 @@ public class MainActivity extends AppCompatActivity implements OnClickUserInterf
 
                     AlertDialog dialog = new AlertDialog.Builder(MainActivity.this)
                             .setMessage("Do you want to delete \"" + user.getFirst_name() + " " + user.getLast_name() + "\"?")
-                            .setView(R.layout.custom_dialog_buttons)  // Set the custom layout for the buttons
+                            .setView(R.layout.custom_dialog_buttons)
                             .setCancelable(false)
                             .create();
 
@@ -351,7 +481,7 @@ public class MainActivity extends AppCompatActivity implements OnClickUserInterf
 
                                 userViewModel.deleteUser(user).observe(MainActivity.this, success -> {
 
-                                    if ("success".equals(success)) {
+                                    if (Constants.SUCCESS.equals(success)) {
                                         Toast.makeText(MainActivity.this, user.getFirst_name() + " " + user.getLast_name() + " removed successfully!", Toast.LENGTH_SHORT).show();
                                         snackbar.show();
                                         dialog.dismiss();
@@ -376,16 +506,14 @@ public class MainActivity extends AppCompatActivity implements OnClickUserInterf
     }
 
     private void navigateToAddUserActivity(){
-        floatingActionButton.setOnClickListener(view -> {
-                    startActivity(new Intent(MainActivity.this, AddUserActivity.class));
-                }
+        floatingActionButton.setOnClickListener(view -> startActivity(new Intent(MainActivity.this, AddUserActivity.class))
         );
     }
 
     @Override
     public void onClickUser(User user) {
-            Intent intent = new Intent(MainActivity.this,UserDetailsActivity.class);
-            intent.putExtra("model",user);
-            startActivity(intent);
+        Intent intent = new Intent(MainActivity.this,UserDetailsActivity.class);
+        intent.putExtra(Constants.USER_MODEL,user);
+        startActivity(intent);
     }
 }

@@ -59,45 +59,6 @@
         android:layout_gravity="center"
         android:paddingBottom="16dp" />
 
-    <!-- Label for Email -->
-    <TextView
-        android:id="@+id/label_email"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/label_email_edit_text_hint"
-        android:textColor="@color/white"
-        android:layout_marginBottom="4dp" />
-
-    <!-- EditText for Email -->
-    <EditText
-        android:id="@+id/edit_text_email"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:hint="@string/email_edit_text_hint"
-        android:textColorHint="@color/white"
-        android:background="@drawable/edit_text_border"
-        android:textColor="@color/white"
-        android:inputType="textEmailAddress"
-        android:padding="8dp"
-        android:layout_marginBottom="8dp" />
-
-    <!-- Error Label for Email -->
-    <TextView
-        android:id="@+id/error_label_email_update_user"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@android:color/holo_red_dark"
-        android:visibility="gone"
-        android:text="@string/error_invalid_email" />
-
-    <TextView
-        android:id="@+id/error_label_email_missing_update_user"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@android:color/holo_red_dark"
-        android:visibility="gone"
-        android:text="@string/error_missing_email" />
-
     <!-- Label for First Name -->
     <TextView
         android:id="@+id/label_first_name"
@@ -159,6 +120,135 @@
         android:visibility="gone"
         android:text="@string/error_invalid_lastname" />
 
+        <!-- Label for Email -->
+        <TextView
+            android:id="@+id/label_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/label_email_edit_text_hint"
+            android:textColor="@color/white"
+            android:layout_marginBottom="4dp" />
+
+        <!-- EditText for Email -->
+        <EditText
+            android:id="@+id/edit_text_email"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="@string/email_edit_text_hint"
+            android:textColorHint="@color/white"
+            android:background="@drawable/edit_text_border"
+            android:textColor="@color/white"
+            android:inputType="textEmailAddress"
+            android:padding="8dp"
+            android:layout_marginBottom="8dp" />
+
+        <!-- Error Label for Email -->
+        <TextView
+            android:id="@+id/error_label_email_update_user"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/holo_red_dark"
+            android:visibility="gone"
+            android:text="@string/error_invalid_email" />
+
+        <TextView
+            android:id="@+id/error_label_email_missing_update_user"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/holo_red_dark"
+            android:visibility="gone"
+            android:text="@string/error_missing_email" />
+
+        <!-- Buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="20dp">
+
+            <!-- Cancel Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/button_cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/cancel_btn_text"
+                android:backgroundTint="@color/cancel_background_btn_tint"
+                app:icon="@drawable/baseline_cancel_24"
+                app:iconGravity="start"
+                app:iconPadding="8dp" />
+
+            <Space
+                android:layout_width="16dp"
+                android:layout_height="wrap_content"/>
+
+            <!-- Update Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/button_update"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="?attr/colorPrimary"
+                android:text="@string/update_btn_text"
+                app:icon="@drawable/baseline_edit_24"
+                app:iconGravity="start"
+                app:iconPadding="8dp" />
+
+        </LinearLayout>
+
+        <!-- Line Separator -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/white"
+            android:layout_marginTop="26dp"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Label for Created At -->
+        <TextView
+            android:id="@+id/label_created_at"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/createdAt"
+            android:textColor="@color/white"
+            android:layout_marginBottom="4dp" />
+
+        <!-- EditText for Created At (disabled) -->
+        <EditText
+            android:id="@+id/edit_text_created_at"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:textColorHint="@color/white"
+            android:background="@drawable/edit_text_border"
+            android:textColor="@color/white"
+            android:inputType="text"
+            android:padding="8dp"
+            android:enabled="false"
+            android:focusable="false"
+            android:layout_marginBottom="8dp" />
+
+        <!-- Label for Updated At -->
+        <TextView
+            android:id="@+id/label_updated_at"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/updatedAt"
+            android:textColor="@color/white"
+            android:layout_marginBottom="4dp" />
+
+        <!-- EditText for Updated At (disabled) -->
+        <EditText
+            android:id="@+id/edit_text_updated_at"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:textColorHint="@color/white"
+            android:background="@drawable/edit_text_border"
+            android:textColor="@color/white"
+            android:inputType="text"
+            android:padding="8dp"
+            android:enabled="false"
+            android:focusable="false"
+            android:layout_marginBottom="8dp" />
+
     <!-- General Feedback TextView -->
     <TextView
         android:id="@+id/general_feedback_text_update_user"
@@ -172,40 +262,5 @@
         android:layout_marginBottom="16dp" />
 
 
-    <!-- Buttons -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:layout_marginTop="24dp">
-
-        <!-- Cancel Button -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/button_cancel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/cancel_btn_text"
-            android:backgroundTint="@color/cancel_background_btn_tint"
-            app:icon="@drawable/baseline_cancel_24"
-            app:iconGravity="start"
-            app:iconPadding="8dp" />
-
-        <Space
-            android:layout_width="16dp"
-            android:layout_height="wrap_content"/>
-
-        <!-- Update Button -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/button_update"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:backgroundTint="?attr/colorPrimary"
-            android:text="@string/update_btn_text"
-            app:icon="@drawable/baseline_edit_24"
-            app:iconGravity="start"
-            app:iconPadding="8dp" />
-
-    </LinearLayout>
 </LinearLayout>
 </ScrollView>

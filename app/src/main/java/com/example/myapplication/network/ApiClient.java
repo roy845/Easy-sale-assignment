@@ -1,16 +1,17 @@
 package com.example.myapplication.network;
 
+import com.example.myapplication.constants.Constants;
+
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiClient {
-    private static final String BASE_URL = "https://reqres.in/api/";
     private static Retrofit retrofit;
 
     public static Retrofit getRetrofitInstance() {
         if (retrofit == null) {
             retrofit = new Retrofit.Builder()
-                    .baseUrl(BASE_URL)
+                    .baseUrl(Constants.BASE_URL)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
         }

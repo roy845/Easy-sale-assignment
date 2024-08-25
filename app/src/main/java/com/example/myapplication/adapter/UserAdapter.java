@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.example.myapplication.R;
+import com.example.myapplication.constants.Constants;
 import com.example.myapplication.interfaces.OnClickUserInterface;
 import com.example.myapplication.models.User;
 import java.io.IOException;
@@ -50,15 +51,15 @@ public class UserAdapter extends PagingDataAdapter<User, UserAdapter.UserViewHol
         User user = getItem(position);
         if(user != null){
 
-        holder.row_linearlayout.setOnClickListener(v -> onClickUserInterface.onClickUser(user));
+            holder.row_linearlayout.setOnClickListener(v -> onClickUserInterface.onClickUser(user));
 
-        holder.avatarImageView.setOnClickListener(v-> createDialog(user.getAvatar(),user));
+            holder.avatarImageView.setOnClickListener(v-> createDialog(user.getAvatar(),user));
 
-        try {
-            holder.bindData(user.getFirst_name(), user.getLast_name(),user.getEmail(),user.getAvatar());
-        } catch (IOException e) {
-            Log.e("UsersAdapter", "Error binding user data", e);
-        }
+            try {
+                holder.bindData(user.getFirst_name(), user.getLast_name(),user.getEmail(),user.getAvatar());
+            } catch (IOException e) {
+                Log.e(Constants.USERS_ADAPTER, Constants.ERROR_BINDING_USER_DATA, e);
+            }
         }
     }
 
