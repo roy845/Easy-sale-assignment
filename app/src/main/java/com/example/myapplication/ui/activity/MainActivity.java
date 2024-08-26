@@ -11,8 +11,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -25,11 +25,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
+import androidx.core.view.GravityCompat;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.paging.LoadState;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -45,24 +49,29 @@ import com.example.myapplication.models.User;
 import com.example.myapplication.viewmodel.UserViewModel;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import android.net.Uri;
 
 
-public class MainActivity extends AppCompatActivity implements OnClickUserInterface {
+public class MainActivity extends AppCompatActivity implements OnClickUserInterface,NavigationView.OnNavigationItemSelectedListener {
     private UserViewModel userViewModel;
     private RecyclerView recyclerView;
     private UserAdapter userAdapter;
     ProgressBar progressBar,progressBarLoadingInitialUsers;
+    Toolbar toolbar;
     EditText searchEditText;
     LinearLayout layoutSwitchGroup;
     FloatingActionButton floatingActionButton;
     MaterialButton prevButton,nextButton;
     private final Handler handler = new Handler();
     private Runnable searchRunnable;
+    private DrawerLayout drawerLayout;
+    private NavigationView navigationView;
+    private ActionBarDrawerToggle actionBarDrawerToggle;
     private TextView emptyResultsTextView,currentPageTextView,totalPagesTextView,pageSeparatorTextView;
     private ImageView emptyResultsImageView;
-    private ImageButton buttonListLayout, buttonGridLayout,graphsImageButton,deleteAllUsersImageButton;
+    private ImageButton buttonListLayout, buttonGridLayout,deleteAllUsersImageButton;
     private boolean isDialogShown = false;
     int CURRENT_PAGE = 1,TOTAL_PAGES = 2;
 
@@ -78,7 +87,6 @@ public class MainActivity extends AppCompatActivity implements OnClickUserInterf
         });
 
         initViews();
-        setActionBar();
         setupViewModel();
         initRecyclerViewAndAdapter();
         observeAllUsers();
@@ -92,9 +100,28 @@ public class MainActivity extends AppCompatActivity implements OnClickUserInterf
         handleNextPage();
         observeInitialLoadingLiveData();
         deleteAllUsersOnClickListener();
-        navigateToGraphsActivity();
         navigateToAddUserActivity();
+        setupDrawerNavigation();
     }
+
+    private void setupDrawerNavigation(){
+        toolbar = findViewById(R.id.toolbar);
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View customTitleView = inflater.inflate(R.layout.toolbar_title, null);
+        TextView titleTextView = customTitleView.findViewById(R.id.toolbar_title);
+        titleTextView.setText(R.string.app_name);
+        toolbar.addView(customTitleView);
+        setSupportActionBar(toolbar);
+        navigationView.setNavigationItemSelectedListener(this);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);
+        drawerLayout.addDrawerListener(actionBarDrawerToggle);
+        actionBarDrawerToggle.syncState();
+        actionBarDrawerToggle.getDrawerArrowDrawable().setColor(ContextCompat.getColor(this, android.R.color.white));
+    }
+
+
+
 
     private void deleteAllUsersOnClickListener(){
         deleteAllUsersImageButton.setOnClickListener(view->{
@@ -196,10 +223,6 @@ public class MainActivity extends AppCompatActivity implements OnClickUserInterf
         });
     }
 
-    private void navigateToGraphsActivity(){
-        graphsImageButton.setOnClickListener(view -> startActivity(new Intent(MainActivity.this, GraphsActivity.class)));
-    }
-
     private void setupLayoutSwitchButtons() {
         buttonListLayout.setOnClickListener(v -> {
             switchToLinearLayout();
@@ -246,25 +269,6 @@ public class MainActivity extends AppCompatActivity implements OnClickUserInterf
         buttonListLayout.setColorFilter(Color.WHITE);
     }
 
-    private void setActionBar(){
-        ActionBar actionBar = getSupportActionBar();
-
-        if (actionBar != null) {
-
-            actionBar.setTitle(Constants.EMPTY_STRING);
-
-            LinearLayout customActionBarView = createCustomActionBarView();
-
-            ActionBar.LayoutParams params = new ActionBar.LayoutParams(
-                    ActionBar.LayoutParams.WRAP_CONTENT,
-                    ActionBar.LayoutParams.WRAP_CONTENT,
-                    Gravity.END | Gravity.CENTER_VERTICAL
-            );
-
-            actionBar.setCustomView(customActionBarView, params);
-            actionBar.setDisplayShowCustomEnabled(true);
-        }
-    }
 
     private void observeInitialLoadingLiveData(){
         userViewModel.getLoadingInitialUsers().observe(MainActivity.this,isLoadingUsers->{
@@ -356,13 +360,14 @@ public class MainActivity extends AppCompatActivity implements OnClickUserInterf
         buttonListLayout = findViewById(R.id.button_list_layout);
         buttonGridLayout = findViewById(R.id.button_grid_layout);
         layoutSwitchGroup = findViewById(R.id.layoutSwitchGroup);
-        graphsImageButton = findViewById(R.id.button_graphs);
         currentPageTextView = findViewById(R.id.current_page);
         pageSeparatorTextView = findViewById(R.id.page_separator);
         totalPagesTextView = findViewById(R.id.total_pages);
         prevButton = findViewById(R.id.button_prev);
         nextButton = findViewById(R.id.button_next);
         deleteAllUsersImageButton = findViewById(R.id.button_deleteAll);
+        drawerLayout = findViewById(R.id.drawer_layout);
+        navigationView = findViewById(R.id.navigation_view);
     }
 
     private void setupViewModel() {
@@ -376,57 +381,6 @@ public class MainActivity extends AppCompatActivity implements OnClickUserInterf
         });
     }
 
-    private LinearLayout createCustomActionBarView() {
-
-        TextView textView = new TextView(this);
-        textView.setText(R.string.app_name);
-        textView.setTextColor(Color.WHITE);
-        textView.setTextSize(18);
-        textView.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
-
-        ImageView imageView = getImageView();
-
-
-        LinearLayout linearLayout = new LinearLayout(this);
-        linearLayout.setOrientation(LinearLayout.HORIZONTAL);
-        linearLayout.setGravity(Gravity.CENTER_VERTICAL);
-        linearLayout.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
-
-        LinearLayout.LayoutParams textParams = new LinearLayout.LayoutParams(
-                0,
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                1.0f
-        );
-        textView.setLayoutParams(textParams);
-
-        LinearLayout.LayoutParams imageParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-        );
-        imageParams.setMargins(16, 0, 0, 0);
-        imageView.setLayoutParams(imageParams);
-
-        linearLayout.addView(textView);
-        linearLayout.addView(imageView);
-
-        return linearLayout;
-    }
-
-    private @NonNull ImageView getImageView() {
-        ImageView imageView = new ImageView(this);
-        imageView.setImageResource(R.drawable.baseline_people_24);
-
-        LinearLayout.LayoutParams imageParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-        );
-        imageParams.setMargins(16, 0, 0, 0);
-        imageView.setLayoutParams(imageParams);
-
-        return imageView;
-    }
-
-
     private void showLoadingState() {
         progressBar.setVisibility(View.VISIBLE);
         recyclerView.setVisibility(View.GONE);
@@ -434,7 +388,6 @@ public class MainActivity extends AppCompatActivity implements OnClickUserInterf
         emptyResultsImageView.setVisibility(View.GONE);
         buttonListLayout.setVisibility(View.GONE);
         buttonGridLayout.setVisibility(View.GONE);
-        graphsImageButton.setVisibility(View.GONE);
         deleteAllUsersImageButton.setVisibility(View.GONE);
     }
 
@@ -515,7 +468,6 @@ public class MainActivity extends AppCompatActivity implements OnClickUserInterf
         }
 
         deleteAllUsersImageButton.setVisibility(View.VISIBLE);
-        graphsImageButton.setVisibility(View.VISIBLE);
     }
 
 
@@ -533,10 +485,7 @@ public class MainActivity extends AppCompatActivity implements OnClickUserInterf
         pageSeparatorTextView.setVisibility(View.GONE);
         totalPagesTextView.setVisibility(View.GONE);
         deleteAllUsersImageButton.setVisibility(View.GONE);
-        graphsImageButton.setVisibility(View.VISIBLE);
     }
-
-
 
     private void searchUsers(String query) {
 
@@ -619,5 +568,36 @@ public class MainActivity extends AppCompatActivity implements OnClickUserInterf
         Intent intent = new Intent(MainActivity.this,UserDetailsActivity.class);
         intent.putExtra(Constants.USER_MODEL,user);
         startActivity(intent);
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        String currentActivity = this.getClass().getSimpleName();
+
+        int id = item.getItemId();
+        if (id == R.id.nav_home) {
+            if (!currentActivity.equals(MainActivity.class.getSimpleName())) {
+                Intent homeIntent = new Intent(this, MainActivity.class);
+                startActivity(homeIntent);
+                finish();
+            }
+        } else if (id == R.id.nav_add_new_user) {
+            startActivity(new Intent(MainActivity.this, AddUserActivity.class));
+        } else if (id == R.id.nav_graphs) {
+            startActivity(new Intent(MainActivity.this, GraphsActivity.class));
+        } else {
+            return false;
+        }
+        drawerLayout.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
     }
 }

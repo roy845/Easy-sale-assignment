@@ -1,8 +1,9 @@
 package com.example.myapplication.ui.activity;
 
-import android.graphics.Color;
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -12,11 +13,15 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
+import androidx.core.view.GravityCompat;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.ViewModelProvider;
 import com.example.myapplication.R;
 import com.example.myapplication.constants.Constants;
@@ -25,13 +30,14 @@ import com.example.myapplication.models.UserCountPerMonth;
 import com.example.myapplication.utils.DateUtils;
 import com.example.myapplication.viewmodel.UserSessionViewModel;
 import com.example.myapplication.viewmodel.UserViewModel;
+import com.google.android.material.navigation.NavigationView;
 import org.eazegraph.lib.charts.BarChart;
 import org.eazegraph.lib.models.BarModel;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class GraphsActivity extends AppCompatActivity {
+public class GraphsActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private BarChart newUsersPerMonthBarchart,dailyUsageBarchart;
     private UserViewModel usersViewModel;
     private UserSessionViewModel userSessionViewModel;
@@ -42,6 +48,10 @@ public class GraphsActivity extends AppCompatActivity {
     private LinearLayout noUsersContainer;
     private TextView tvNoUsersFound;
     private ImageView ivSearchOffIconUsers;
+    private DrawerLayout drawerLayout;
+    private NavigationView navigationView;
+    private ActionBarDrawerToggle actionBarDrawerToggle;
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,11 +65,26 @@ public class GraphsActivity extends AppCompatActivity {
         });
 
         initViews();
-        setActionBar();
         setupViewModel();
-        setupMonthSelector();
         initWeekSelector();
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        setupMonthSelector();
+        setupDrawerNavigation();
+    }
+
+    private void setupDrawerNavigation(){
+
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View customTitleView = inflater.inflate(R.layout.toolbar_title, null);
+        TextView titleTextView = customTitleView.findViewById(R.id.toolbar_title);
+        titleTextView.setText(R.string.graphs);
+        toolbar.addView(customTitleView);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);
+        drawerLayout.addDrawerListener(actionBarDrawerToggle);
+        actionBarDrawerToggle.syncState();
+        actionBarDrawerToggle.getDrawerArrowDrawable().setColor(ContextCompat.getColor(this, android.R.color.white));
+        navigationView.setNavigationItemSelectedListener(this);
     }
 
     private void setupMonthSelector() {
@@ -148,6 +173,9 @@ public class GraphsActivity extends AppCompatActivity {
         tvNoUsersFound = findViewById(R.id.tvNoUsersFound);
         ivSearchOffIconUsers = findViewById(R.id.ivSearchOffIconUsers);
         yAxisLabelNewUsersGraph = findViewById(R.id.yAxisLabelNewUsersGraph);
+        drawerLayout = findViewById(R.id.drawer_layout_graphs);
+        navigationView = findViewById(R.id.navigation_view_graphs);
+        toolbar = findViewById(R.id.toolbar_graphs);
     }
 
 
@@ -240,64 +268,35 @@ public class GraphsActivity extends AppCompatActivity {
         newUsersPerMonthBarchart.startAnimation();
     }
 
-    private void setActionBar(){
-        ActionBar actionBar = getSupportActionBar();
-
-        if (actionBar != null) {
-
-            actionBar.setTitle(Constants.EMPTY_STRING);
-
-
-            LinearLayout customActionBarView = createCustomActionBarView();
-
-            ActionBar.LayoutParams params = new ActionBar.LayoutParams(
-                    ActionBar.LayoutParams.WRAP_CONTENT,
-                    ActionBar.LayoutParams.WRAP_CONTENT,
-                    Gravity.END | Gravity.CENTER_VERTICAL
-            );
-
-            actionBar.setCustomView(customActionBarView, params);
-            actionBar.setDisplayShowCustomEnabled(true);
+    public void onBackPressed() {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
         }
     }
 
-    private LinearLayout createCustomActionBarView() {
-
-        TextView textView = new TextView(this);
-        textView.setText(R.string.graphs);
-        textView.setTextColor(Color.WHITE);
-        textView.setTextSize(18);
-        textView.setGravity(Gravity.END);
-
-        ImageView imageView = getImageView();
-
-        LinearLayout linearLayout = new LinearLayout(this);
-        linearLayout.setOrientation(LinearLayout.HORIZONTAL);
-        linearLayout.setGravity(Gravity.END | Gravity.CENTER_VERTICAL);
-        linearLayout.addView(imageView);
-        linearLayout.addView(textView);
-
-        return linearLayout;
-    }
-
-    private @NonNull ImageView getImageView() {
-        ImageView imageView = new ImageView(this);
-        imageView.setImageResource(R.drawable.baseline_people_24);
-
-
-        LinearLayout.LayoutParams imageParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-        );
-        imageParams.setMargins(16, 0, 0, 0);
-
-        imageView.setLayoutParams(imageParams);
-        return imageView;
-    }
 
     @Override
-    public boolean onSupportNavigateUp() {
-        onBackPressed();
-        return super.onSupportNavigateUp();
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+        String currentActivity = this.getClass().getSimpleName();
+
+        int id = item.getItemId();
+        if (id == R.id.nav_home) {
+            startActivity(new Intent(GraphsActivity.this,MainActivity.class));
+        } else if (id == R.id.nav_add_new_user) {
+            startActivity(new Intent(GraphsActivity.this, AddUserActivity.class));
+        } else if (id == R.id.nav_graphs) {
+            if (!currentActivity.equals(AddUserActivity.class.getSimpleName())) {
+                Intent addUserIntent = new Intent(this, MainActivity.class);
+                startActivity(addUserIntent);
+                finish();
+            }
+        } else {
+            return false;
+        }
+        drawerLayout.closeDrawer(GravityCompat.START);
+        return true;
     }
 }

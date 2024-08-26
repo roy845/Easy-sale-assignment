@@ -180,39 +180,43 @@ The application follows the MVVM (Model-View-ViewModel) architecture.
 
 <b> Welcome dialog: </b>
 
-<a href="https://ibb.co/YpRhLfY"><img src="https://i.ibb.co/4PmpV49/Whats-App-Image-2024-08-26-at-01-01-01.jpg" alt="Whats-App-Image-2024-08-26-at-01-01-01" border="1"></a>
+<a href="https://ibb.co/phbLCsF"><img src="https://i.ibb.co/6XrW6pC/Whats-App-Image-2024-08-26-at-16-33-18.jpg" alt="Whats-App-Image-2024-08-26-at-16-33-18" border="1"></a>
+
+<b> Navigation view: </b>
+
+<a href="https://ibb.co/2gwCVvd"><img src="https://i.ibb.co/MMbtwc7/Whats-App-Image-2024-08-26-at-16-51-32.jpg" alt="Whats-App-Image-2024-08-26-at-16-51-32" border="1"></a>
 
 <b> Display list of users: </b>
 
-<a href="https://ibb.co/1R7h9Xg"><img src="https://i.ibb.co/r5FTZpj/Whats-App-Image-2024-08-26-at-01-05-15.jpg" alt="Whats-App-Image-2024-08-26-at-01-05-15" border="1"></a>
+<a href="https://ibb.co/C7gfHz2"><img src="https://i.ibb.co/pzcSLxy/Whats-App-Image-2024-08-26-at-16-39-49-1.jpg" alt="Whats-App-Image-2024-08-26-at-16-39-49-1" border="1"></a>
 
-<a href="https://ibb.co/KbPhB4j"><img src="https://i.ibb.co/YPCQJn7/Whats-App-Image-2024-08-26-at-01-05-14.jpg" alt="Whats-App-Image-2024-08-26-at-01-05-14" border="1"></a>
+<a href="https://ibb.co/zfBKY5x"><img src="https://i.ibb.co/4NXBGft/Whats-App-Image-2024-08-26-at-16-39-49.jpg" alt="Whats-App-Image-2024-08-26-at-16-39-49" border="1"></a>
 
 <b> CRUD Operations: </b>
 
 <b> Add new user </b>
 
-<a href="https://ibb.co/phmXFN6"><img src="https://i.ibb.co/XYwJR6f/Whats-App-Image-2024-08-25-at-18-38-52.jpg" alt="Whats-App-Image-2024-08-25-at-18-38-52" border="1"></a>
+<a href="https://ibb.co/DkzDjDT"><img src="https://i.ibb.co/ctkcscV/Whats-App-Image-2024-08-26-at-16-46-29-3.jpg" alt="Whats-App-Image-2024-08-26-at-16-46-29-3" border="1"></a>
 
 <b> Update existing user </b>
 
-<a href="https://ibb.co/j9t1Q3k"><img src="https://i.ibb.co/mrpM2h5/Whats-App-Image-2024-08-25-at-18-44-53.jpg" alt="Whats-App-Image-2024-08-25-at-18-44-53" border="1"></a>
+<a href="https://ibb.co/smYDPSp"><img src="https://i.ibb.co/w0mbLHZ/Whats-App-Image-2024-08-26-at-16-46-30.jpg" alt="Whats-App-Image-2024-08-26-at-16-46-30" border="1"></a>
 
 <b> Delete existing user </b>
 
-<a href="https://ibb.co/BcqxSFW"><img src="https://i.ibb.co/XjSgvM0/Whats-App-Image-2024-08-25-at-18-47-32.jpg" alt="Whats-App-Image-2024-08-25-at-18-47-32" border="1"></a>
+<a href="https://ibb.co/SPqkLj7"><img src="https://i.ibb.co/MsqzXv5/Whats-App-Image-2024-08-26-at-16-46-29-2.jpg" alt="Whats-App-Image-2024-08-26-at-16-46-29-2" border="1"></a>
 
 <b> Delete ALL users </b>
 
-<a href="https://ibb.co/X5jPN9y"><img src="https://i.ibb.co/JpmT0Nx/Whats-App-Image-2024-08-26-at-00-52-47.jpg" alt="Whats-App-Image-2024-08-26-at-00-52-47" border="1"></a>
+<a href="https://ibb.co/xmxq0mt"><img src="https://i.ibb.co/bHc5ZHM/Whats-App-Image-2024-08-26-at-16-46-29-1.jpg" alt="Whats-App-Image-2024-08-26-at-16-46-29-1" border="1"></a>
 
 <b> Search users </b>
 
-<a href="https://ibb.co/WKSXGJ7"><img src="https://i.ibb.co/12HN7WB/Whats-App-Image-2024-08-25-at-18-49-05.jpg" alt="Whats-App-Image-2024-08-25-at-18-49-05" border="1"></a>
+<a href="https://ibb.co/MNpnXPW"><img src="https://i.ibb.co/kc0Kdqk/Whats-App-Image-2024-08-26-at-16-46-29.jpg" alt="Whats-App-Image-2024-08-26-at-16-46-29" border="1"></a>
 
 <b> Graph views </b>
 
-<a href="https://ibb.co/CBfnsdC"><img src="https://i.ibb.co/2qTjY2V/Whats-App-Image-2024-08-25-at-18-51-25.jpg" alt="Whats-App-Image-2024-08-25-at-18-51-25" border="1"></a>
+<a href="https://ibb.co/GkPPVDF"><img src="https://i.ibb.co/Qnmm6VX/Whats-App-Image-2024-08-26-at-16-46-28.jpg" alt="Whats-App-Image-2024-08-26-at-16-46-28" border="1"></a>
 
 ## Contributing
 

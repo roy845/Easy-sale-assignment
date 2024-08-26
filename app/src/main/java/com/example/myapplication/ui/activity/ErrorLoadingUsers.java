@@ -1,16 +1,16 @@
 package com.example.myapplication.ui.activity;
 
 
-import android.graphics.Color;
+
 import android.os.Bundle;
-import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import androidx.activity.EdgeToEdge;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -22,6 +22,11 @@ import com.google.android.material.button.MaterialButton;
 public class ErrorLoadingUsers extends AppCompatActivity {
     private UserViewModel userViewModel;
     private MaterialButton retryButton;
+    ProgressBar progressBarLoadingUsers;
+    ImageView errorImageView;
+    TextView errorTextView;
+    Toolbar toolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,68 +39,27 @@ public class ErrorLoadingUsers extends AppCompatActivity {
         });
 
         initViews();
-        setActionBar();
+        setupActionBar();
         setupViewModel();
         initRetryButtonClickListener();
     }
 
-    private void setActionBar(){
-        ActionBar actionBar = getSupportActionBar();
-
-        if (actionBar != null) {
-
-            actionBar.setTitle("");
-
-
-            LinearLayout customActionBarView = createCustomActionBarView();
-
-            ActionBar.LayoutParams params = new ActionBar.LayoutParams(
-                    ActionBar.LayoutParams.WRAP_CONTENT,
-                    ActionBar.LayoutParams.WRAP_CONTENT,
-                    Gravity.END | Gravity.CENTER_VERTICAL
-            );
-
-            actionBar.setCustomView(customActionBarView, params);
-            actionBar.setDisplayShowCustomEnabled(true);
-        }
-    }
-
-    private LinearLayout createCustomActionBarView() {
-
-        TextView textView = new TextView(this);
-        textView.setText(R.string.error_loading_users_title);
-        textView.setTextColor(Color.WHITE);
-        textView.setTextSize(18);
-        textView.setGravity(Gravity.END);
-
-        ImageView imageView = getImageView();
-
-        LinearLayout linearLayout = new LinearLayout(this);
-        linearLayout.setOrientation(LinearLayout.HORIZONTAL);
-        linearLayout.setGravity(Gravity.END | Gravity.CENTER_VERTICAL);
-        linearLayout.addView(imageView);
-        linearLayout.addView(textView);
-
-        return linearLayout;
-    }
-
-    private @NonNull ImageView getImageView() {
-        ImageView imageView = new ImageView(this);
-        imageView.setImageResource(R.drawable.baseline_people_24);
-
-
-        LinearLayout.LayoutParams imageParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-        );
-        imageParams.setMargins(16, 0, 0, 0);
-
-        imageView.setLayoutParams(imageParams);
-        return imageView;
+    private void setupActionBar(){
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View customTitleView = inflater.inflate(R.layout.toolbar_title, null);
+        TextView titleTextView = customTitleView.findViewById(R.id.toolbar_title);
+        titleTextView.setText(R.string.error_loading_users_title);
+        toolbar.addView(customTitleView);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
     }
 
     private void initViews(){
         retryButton = findViewById(R.id.retry_button);
+        errorImageView = findViewById(R.id.error_image);
+        errorTextView = findViewById(R.id.error_msg_text);
+        progressBarLoadingUsers = findViewById(R.id.progressBarLoadingUsers);
+        toolbar = findViewById(R.id.toolbar);
     }
 
     public void initRetryButtonClickListener(){
@@ -104,6 +68,10 @@ public class ErrorLoadingUsers extends AppCompatActivity {
             userViewModel.retryLoadUsers();
             userViewModel.getErrorLiveData().observe(ErrorLoadingUsers.this, error -> {
                 if(!error){
+                    progressBarLoadingUsers.setVisibility(View.VISIBLE);
+                    retryButton.setVisibility(View.GONE);
+                    errorImageView.setVisibility(View.GONE);
+                    errorTextView.setVisibility(View.GONE);
                     finish();
                 }
             });

@@ -15,4 +15,11 @@
     <color name="colorAccentDark">#018786</color>
     <color name="colorBackground">#FFFFFF</color>
     <color name="swipeDeleteColor">#b80f0a</color>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="lavender">#8692f7</color>
+    <color name = "nav_view_background_color">#0b141b</color>
 </resources>

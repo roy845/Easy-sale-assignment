@@ -1,16 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
+    android:id="@+id/drawer_layout"
+    android:layoutDirection="ltr"
+    android:fitsSystemWindows="true"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/lines"
     tools:context=".ui.activity.MainActivity">
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/lines">
+
+        <!-- Toolbar at the top -->
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layoutDirection="ltr"
+            app:titleTextColor="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:layout_marginTop="?attr/actionBarSize">
 
         <LinearLayout
             android:id="@+id/searchBarLayout"
@@ -88,15 +107,6 @@
                 android:background="?attr/selectableItemBackground"
                 android:contentDescription="@string/delete_all"
                 android:src="@drawable/baseline_delete_24"
-                app:tint="@android:color/white" />
-
-            <ImageButton
-                android:id="@+id/button_graphs"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="?attr/selectableItemBackground"
-                android:contentDescription="@string/graphs"
-                android:src="@drawable/baseline_bar_chart_24"
                 app:tint="@android:color/white" />
 
         </LinearLayout>
@@ -181,9 +191,10 @@
             app:layout_constraintTop_toBottomOf="@id/recycler_view"
             app:layout_constraintVertical_bias="0.285">
 
-            <!-- "Next" button on the right -->
+
+            <!-- "Prev" button on the left -->
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/button_next"
+                android:id="@+id/button_prev"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:backgroundTint="?attr/colorPrimary"
@@ -199,7 +210,7 @@
 
             <!-- Centered text views -->
             <TextView
-                android:id="@+id/total_pages"
+                android:id="@+id/current_page"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@android:color/white"
@@ -216,11 +227,12 @@
                 android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/current_page"
+                android:id="@+id/total_pages"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@android:color/white"
                 android:textSize="16sp" />
+
 
 
             <!-- Spacer to push the "Prev" button to the right -->
@@ -229,15 +241,17 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1" />
 
-            <!-- "Prev" button on the left -->
+            <!-- "Next" button on the right -->
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/button_prev"
+                android:id="@+id/button_next"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:backgroundTint="?attr/colorPrimary"
                 app:icon="@drawable/baseline_arrow_forward_ios_24"
                 app:iconGravity="end"
                 app:iconPadding="8dp" />
+
+
 
 
 
@@ -259,4 +273,18 @@
             app:tint="@android:color/white" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/navigation_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        android:background="@drawable/nav_view_border"
+        app:headerLayout="@layout/nav_header"
+        app:menu="@menu/nav_menu"
+        app:itemTextColor="@color/white"
+        app:itemIconTint="@color/white"/>
+
+</androidx.drawerlayout.widget.DrawerLayout>

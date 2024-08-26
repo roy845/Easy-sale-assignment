@@ -3,14 +3,14 @@ package com.example.myapplication.ui.activity;
 
 import android.app.Dialog;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
@@ -19,11 +19,15 @@ import androidx.activity.result.PickVisualMediaRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
+import androidx.core.view.GravityCompat;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 import com.bumptech.glide.Glide;
@@ -33,10 +37,11 @@ import com.example.myapplication.models.User;
 import com.example.myapplication.utils.ValidationUtils;
 import com.example.myapplication.viewmodel.UserViewModel;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.navigation.NavigationView;
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class AddUserActivity extends AppCompatActivity {
+public class AddUserActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private ImageView userAvatarImageView,uploadIcon;
     TextView addUserTitleTextView;
     MaterialButton addUserButton;
@@ -47,7 +52,10 @@ public class AddUserActivity extends AppCompatActivity {
     private TextView errorMissingEmailTextView, errorInvalidEmailTextView, errorFirstNameTextView, errorLastNameTextView,
             errorImageViewTextView,generalFeedbackTextView;
     private Dialog imageDialog;
-
+    private DrawerLayout drawerLayout;
+    private NavigationView navigationView;
+    private ActionBarDrawerToggle actionBarDrawerToggle;
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +69,6 @@ public class AddUserActivity extends AppCompatActivity {
         });
 
         initViews();
-        setActionBar();
         setupViewModel();
         setGravityEditTexts();
         initUserAvatarClickListener();
@@ -71,31 +78,26 @@ public class AddUserActivity extends AppCompatActivity {
         restoreImageView(savedInstanceState);
         restoreEditTextsTexts(savedInstanceState);
         restoreImageDialog(savedInstanceState);
+        setupDrawerNavigation();
         navigateToMainActivity();
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-    private void setActionBar(){
-        ActionBar actionBar = getSupportActionBar();
 
-        if (actionBar != null) {
-
-            actionBar.setTitle("");
-
-            LinearLayout customActionBarView = createCustomActionBarView();
-
-            ActionBar.LayoutParams params = new ActionBar.LayoutParams(
-                    ActionBar.LayoutParams.WRAP_CONTENT,
-                    ActionBar.LayoutParams.WRAP_CONTENT,
-                    Gravity.END | Gravity.CENTER_VERTICAL
-            );
-
-            actionBar.setCustomView(customActionBarView, params);
-            actionBar.setDisplayShowCustomEnabled(true);
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setHomeButtonEnabled(true);
-        }
+    private void setupDrawerNavigation(){
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View customTitleView = inflater.inflate(R.layout.toolbar_title, null);
+        TextView titleTextView = customTitleView.findViewById(R.id.toolbar_title);
+        titleTextView.setText(R.string.add_new_user_title);
+        toolbar.addView(customTitleView);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        navigationView.setNavigationItemSelectedListener(this);
+        actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);
+        drawerLayout.addDrawerListener(actionBarDrawerToggle);
+        actionBarDrawerToggle.syncState();
+        actionBarDrawerToggle.getDrawerArrowDrawable().setColor(ContextCompat.getColor(this, android.R.color.white));
     }
+
 
     private void restoreImageDialog(Bundle savedInstanceState){
         if (savedInstanceState != null) {
@@ -303,44 +305,14 @@ public class AddUserActivity extends AppCompatActivity {
 
 
     @Override
-    public boolean onSupportNavigateUp() {
-        onBackPressed();
-        return super.onSupportNavigateUp();
+    public void onBackPressed() {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
     }
 
-    private LinearLayout createCustomActionBarView() {
-
-        TextView textView = new TextView(this);
-        textView.setText(R.string.add_new_user_title);
-        textView.setTextColor(Color.WHITE);
-        textView.setTextSize(18);
-        textView.setGravity(Gravity.END);
-
-        ImageView imageView = getImageView();
-
-        LinearLayout linearLayout = new LinearLayout(this);
-        linearLayout.setOrientation(LinearLayout.HORIZONTAL);
-        linearLayout.setGravity(Gravity.END | Gravity.CENTER_VERTICAL);
-        linearLayout.addView(imageView);
-        linearLayout.addView(textView);
-
-        return linearLayout;
-    }
-
-    private @NonNull ImageView getImageView() {
-        ImageView imageView = new ImageView(this);
-        imageView.setImageResource(R.drawable.baseline_people_24);
-
-
-        LinearLayout.LayoutParams imageParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-        );
-        imageParams.setMargins(16, 0, 0, 0);
-
-        imageView.setLayoutParams(imageParams);
-        return imageView;
-    }
 
     private void initViews(){
         addUserTitleTextView = findViewById(R.id.add_user_title);
@@ -357,6 +329,9 @@ public class AddUserActivity extends AppCompatActivity {
         errorLastNameTextView = findViewById(R.id.error_label_last_name);
         errorImageViewTextView =  findViewById(R.id.error_label_avatar_missing);
         generalFeedbackTextView = findViewById(R.id.general_feedback_text);
+        drawerLayout = findViewById(R.id.drawer_layout_add_user);
+        navigationView = findViewById(R.id.navigation_view_add_user);
+        toolbar = findViewById(R.id.toolbar);
     }
 
     private void setupViewModel() {
@@ -379,4 +354,28 @@ public class AddUserActivity extends AppCompatActivity {
                     Toast.makeText(AddUserActivity.this, Constants.NO_MEDIA_SELECTED, Toast.LENGTH_SHORT).show();
                 }
             });
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+        String currentActivity = this.getClass().getSimpleName();
+
+        int id = item.getItemId();
+        if (id == R.id.nav_home) {
+            startActivity(new Intent(AddUserActivity.this,MainActivity.class));
+        } else if (id == R.id.nav_add_new_user) {
+            if (!currentActivity.equals(AddUserActivity.class.getSimpleName())) {
+                Intent addUserIntent = new Intent(this, MainActivity.class);
+                startActivity(addUserIntent);
+                finish();
+            }
+
+        } else if (id == R.id.nav_graphs) {
+            startActivity(new Intent(AddUserActivity.this, GraphsActivity.class));
+        } else {
+            return false;
+        }
+        drawerLayout.closeDrawer(GravityCompat.START);
+        return true;
+    }
 }

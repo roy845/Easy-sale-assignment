@@ -19,7 +19,6 @@ public class Constants {
     public static final String SUCCESS = "success";
     public static final String ERROR = "error";
     public static final String CONSTRAINT_FAILURE = "constraint_failure";
-    public static final String ERROR_INSERTING_USERS = "Error inserting users into the database. Please try again.";
     public static final String IS_DIALOG_SHOWING = "isDialogShowing";
     public static final String ERROR_MISSING_EMAIL_VISIBILITY = "errorMissingEmailVisibility";
     public static final String ERROR_INVALID_EMAIL_VISIBILITY = "errorInvalidEmailVisibility";

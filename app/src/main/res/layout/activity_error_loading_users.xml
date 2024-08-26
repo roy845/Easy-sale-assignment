@@ -1,41 +1,69 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id = "@+id/errorLoadingUsers"
-    android:background="@drawable/lines"
-    android:gravity="center"
-    android:focusable="true"
-    android:clickable="true"
-    android:orientation="vertical"
-    android:layout_centerInParent="true">
+    android:layout_width="match_parent"
+    android:layoutDirection="ltr"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
 
-    <ImageView
-        android:id="@+id/error_image"
-        android:layout_width="100dp"
-        android:layout_height="50dp"
-        android:contentDescription="@string/error_image_description"
-        android:src="@drawable/baseline_error_24_white" />
+    <!-- Toolbar at the top -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        app:titleTextColor="@color/white"
+        android:layout_alignParentTop="true"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
-    <TextView
-        android:id="@+id/error_msg_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="@string/something_went_wrong"
-        android:textColor="@color/white"
-        android:gravity="center" />
+    <!-- The existing LinearLayout with error content -->
+    <LinearLayout
+        android:id="@+id/errorLoadingUsers"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbar"
+        android:background="@drawable/lines"
+        android:gravity="center"
+        android:focusable="true"
+        android:clickable="true"
+        android:orientation="vertical">
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/retry_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="@string/retry"
-        app:icon="@drawable/baseline_restart_alt_24"
-        app:iconGravity="start"
-        android:backgroundTint="?attr/colorPrimary"
-        app:cornerRadius="18dp" />
+        <ImageView
+            android:id="@+id/error_image"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:contentDescription="@string/error_image_description"
+            android:src="@drawable/baseline_error_24_white" />
 
-</LinearLayout>
+        <ProgressBar
+            android:id="@+id/progressBarLoadingUsers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminateTint="@color/colorPrimary"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/error_msg_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="@string/something_went_wrong"
+            android:textColor="@color/white"
+            android:gravity="center" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/retry_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="@string/retry"
+            app:icon="@drawable/baseline_restart_alt_24"
+            app:iconGravity="start"
+            android:backgroundTint="?attr/colorPrimary"
+            app:cornerRadius="18dp" />
+    </LinearLayout>
+
+</RelativeLayout>

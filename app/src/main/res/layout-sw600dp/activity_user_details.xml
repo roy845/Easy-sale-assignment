@@ -1,264 +1,305 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/main_user_details"
+    android:id="@+id/drawer_layout_user_details"
+    android:layoutDirection="ltr"
+    android:fitsSystemWindows="true"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp"
-    android:background="@drawable/lines"
-    android:focusable="true"
-    android:clickable="true">
+    android:layout_height="match_parent">
 
-    <LinearLayout
+    <!-- Main Content inside CoordinatorLayout -->
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/main_user_details"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="16dp" />
-
-    <!-- Add Edit User TextView -->
-    <TextView
-        android:id="@+id/update_user_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="@string/update_user_title"
-        android:textColor="@color/white"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="16dp" />
-
-    <!-- Avatar -->
-    <ImageView
-        android:id="@+id/user_avatar"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_gravity="center"
-        android:layout_marginBottom="16dp" />
-
-    <ImageView
-        android:id="@+id/upload_icon_user_details"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:layout_gravity="center"
-        android:src="@drawable/baseline_upload_24"
-        android:layout_marginBottom="16dp" />
-
-
-    <!-- Header: Display the first name and last name -->
-    <TextView
-        android:id="@+id/user_name_header"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:textColor="@color/white"
-        android:layout_gravity="center"
-        android:paddingBottom="16dp" />
-
-
-    <!-- Label for First Name -->
-    <TextView
-        android:id="@+id/label_first_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/label_firstname_edit_text_hint"
-        android:textColor="@color/white"
-        android:layout_marginBottom="4dp" />
-
-    <!-- EditText for First Name -->
-    <EditText
-        android:id="@+id/edit_text_first_name"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:hint="@string/firstname_edit_text_hint"
-        android:textColorHint="@color/white"
-        android:background="@drawable/edit_text_border"
-        android:textColor="@color/white"
-        android:inputType="textPersonName"
-        android:padding="8dp"
-        android:layout_marginBottom="8dp" />
-
-    <!-- Error Label for First Name -->
-    <TextView
-        android:id="@+id/error_label_first_name_update_user"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@android:color/holo_red_dark"
-        android:visibility="gone"
-        android:text="@string/error_invalid_firstname" />
-
-    <!-- Label for Last Name -->
-    <TextView
-        android:id="@+id/label_last_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/label_lastname_edit_text_hint"
-        android:textColor="@color/white"
-        android:layout_marginBottom="4dp" />
-
-    <!-- EditText for Last Name -->
-    <EditText
-        android:id="@+id/edit_text_last_name"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:hint="@string/lastname_edit_text_hint"
-        android:textColorHint="@color/white"
-        android:textColor="@color/white"
-        android:inputType="textPersonName"
-        android:background="@drawable/edit_text_border"
-        android:padding="8dp" />
-
-    <!-- Error Label for Last Name -->
-    <TextView
-        android:id="@+id/error_label_last_name_update_user"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@android:color/holo_red_dark"
-        android:visibility="gone"
-        android:text="@string/error_invalid_lastname" />
-
-        <!-- Label for Email -->
-        <TextView
-            android:id="@+id/label_email"
+        <!-- Toolbar -->
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar_user_details"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/label_email_edit_text_hint"
-            android:textColor="@color/white"
-            android:layout_marginBottom="4dp" />
+            android:layoutDirection="ltr"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
-        <!-- EditText for Email -->
-        <EditText
-            android:id="@+id/edit_text_email"
+        <!-- ScrollView containing the main content -->
+        <ScrollView
+            android:id="@+id/main_user_details_scroll_view"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:hint="@string/email_edit_text_hint"
-            android:textColorHint="@color/white"
-            android:background="@drawable/edit_text_border"
-            android:textColor="@color/white"
-            android:inputType="textEmailAddress"
-            android:padding="8dp"
-            android:layout_marginBottom="8dp" />
+            android:layout_height="match_parent"
+            android:layout_marginTop="?attr/actionBarSize"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:background="@drawable/lines"
+            android:focusable="true"
+            android:clickable="true">
 
-        <!-- Error Label for Email -->
-        <TextView
-            android:id="@+id/error_label_email_update_user"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@android:color/holo_red_dark"
-            android:visibility="gone"
-            android:text="@string/error_invalid_email" />
-
-        <TextView
-            android:id="@+id/error_label_email_missing_update_user"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@android:color/holo_red_dark"
-            android:visibility="gone"
-            android:text="@string/error_missing_email" />
-
-        <!-- Buttons -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:layout_marginTop="24dp">
-
-            <!-- Cancel Button -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/button_cancel"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/cancel_btn_text"
-                android:backgroundTint="@color/cancel_background_btn_tint"
-                app:icon="@drawable/baseline_cancel_24"
-                app:iconGravity="start"
-                app:iconPadding="8dp" />
+                android:orientation="vertical">
 
-            <Space
-                android:layout_width="16dp"
-                android:layout_height="wrap_content"/>
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="16dp" />
 
-            <!-- Update Button -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/button_update"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:backgroundTint="?attr/colorPrimary"
-                android:text="@string/update_btn_text"
-                app:icon="@drawable/baseline_edit_24"
-                app:iconGravity="start"
-                app:iconPadding="8dp" />
-        </LinearLayout>
+                <!-- Add/Edit User TextView -->
+                <TextView
+                    android:id="@+id/update_user_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/update_user_title"
+                    android:textColor="@color/white"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="16dp" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@android:color/white"
-            android:layout_marginTop="26dp"
-            android:layout_marginBottom="16dp" />
+                <!-- Avatar -->
+                <ImageView
+                    android:id="@+id/user_avatar"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="16dp" />
 
-        <!-- Label for Created At -->
-        <TextView
-            android:id="@+id/label_created_at"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/createdAt"
-            android:textColor="@color/white"
-            android:layout_marginBottom="4dp" />
+                <ImageView
+                    android:id="@+id/upload_icon_user_details"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/baseline_upload_24"
+                    android:layout_marginBottom="16dp" />
 
-        <!-- EditText for Created At (disabled) -->
-        <EditText
-            android:id="@+id/edit_text_created_at"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:textColorHint="@color/white"
-            android:background="@drawable/edit_text_border"
-            android:textColor="@color/white"
-            android:inputType="text"
-            android:padding="8dp"
-            android:enabled="false"
-            android:focusable="false"
-            android:layout_marginBottom="8dp" />
+                <!-- Header: Display the first name and last name -->
+                <TextView
+                    android:id="@+id/user_name_header"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    android:layout_gravity="center"
+                    android:paddingBottom="16dp" />
 
-        <!-- Label for Updated At -->
-        <TextView
-            android:id="@+id/label_updated_at"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/updatedAt"
-            android:textColor="@color/white"
-            android:layout_marginBottom="4dp" />
+                <!-- Label for First Name -->
+                <TextView
+                    android:id="@+id/label_first_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_firstname_edit_text_hint"
+                    android:textColor="@color/white"
+                    android:layout_marginBottom="4dp" />
 
-        <!-- EditText for Updated At (disabled) -->
-        <EditText
-            android:id="@+id/edit_text_updated_at"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:textColorHint="@color/white"
-            android:background="@drawable/edit_text_border"
-            android:textColor="@color/white"
-            android:inputType="text"
-            android:padding="8dp"
-            android:enabled="false"
-            android:focusable="false"
-            android:layout_marginBottom="8dp" />
+                <!-- EditText for First Name -->
+                <EditText
+                    android:id="@+id/edit_text_first_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:hint="@string/firstname_edit_text_hint"
+                    android:textColorHint="@color/white"
+                    android:background="@drawable/edit_text_border"
+                    android:textColor="@color/white"
+                    android:inputType="textPersonName"
+                    android:padding="8dp"
+                    android:layout_marginBottom="8dp" />
 
-    <!-- General Feedback TextView -->
-    <TextView
-        android:id="@+id/general_feedback_text_update_user"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@android:color/holo_red_dark"
-        android:visibility="gone"
-        android:text="@string/general_feedback"
-        android:gravity="center"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp" />
+                <!-- Error Label for First Name -->
+                <TextView
+                    android:id="@+id/error_label_first_name_update_user"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/holo_red_dark"
+                    android:visibility="gone"
+                    android:text="@string/error_invalid_firstname" />
 
-    </LinearLayout>
-</ScrollView>
+                <!-- Label for Last Name -->
+                <TextView
+                    android:id="@+id/label_last_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_lastname_edit_text_hint"
+                    android:textColor="@color/white"
+                    android:layout_marginBottom="4dp" />
+
+                <!-- EditText for Last Name -->
+                <EditText
+                    android:id="@+id/edit_text_last_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:hint="@string/lastname_edit_text_hint"
+                    android:textColorHint="@color/white"
+                    android:textColor="@color/white"
+                    android:inputType="textPersonName"
+                    android:background="@drawable/edit_text_border"
+                    android:padding="8dp" />
+
+                <!-- Error Label for Last Name -->
+                <TextView
+                    android:id="@+id/error_label_last_name_update_user"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/holo_red_dark"
+                    android:visibility="gone"
+                    android:text="@string/error_invalid_lastname" />
+
+                <!-- Label for Email -->
+                <TextView
+                    android:id="@+id/label_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_email_edit_text_hint"
+                    android:textColor="@color/white"
+                    android:layout_marginBottom="4dp" />
+
+                <!-- EditText for Email -->
+                <EditText
+                    android:id="@+id/edit_text_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:hint="@string/email_edit_text_hint"
+                    android:textColorHint="@color/white"
+                    android:background="@drawable/edit_text_border"
+                    android:textColor="@color/white"
+                    android:inputType="textEmailAddress"
+                    android:padding="8dp"
+                    android:layout_marginBottom="8dp" />
+
+                <!-- Error Label for Email -->
+                <TextView
+                    android:id="@+id/error_label_email_update_user"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/holo_red_dark"
+                    android:visibility="gone"
+                    android:text="@string/error_invalid_email" />
+
+                <TextView
+                    android:id="@+id/error_label_email_missing_update_user"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/holo_red_dark"
+                    android:visibility="gone"
+                    android:text="@string/error_missing_email" />
+
+                <!-- Buttons -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:layout_marginTop="24dp">
+
+                    <!-- Cancel Button -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/button_cancel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/cancel_btn_text"
+                        android:backgroundTint="@color/cancel_background_btn_tint"
+                        app:icon="@drawable/baseline_cancel_24"
+                        app:iconGravity="start"
+                        app:iconPadding="8dp" />
+
+                    <Space
+                        android:layout_width="16dp"
+                        android:layout_height="wrap_content" />
+
+                    <!-- Update Button -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/button_update"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="?attr/colorPrimary"
+                        android:text="@string/update_btn_text"
+                        app:icon="@drawable/baseline_edit_24"
+                        app:iconGravity="start"
+                        app:iconPadding="8dp" />
+                </LinearLayout>
+
+                <!-- Line Separator -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@android:color/white"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="16dp" />
+
+                <!-- Label for Created At -->
+                <TextView
+                    android:id="@+id/label_created_at"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/createdAt"
+                    android:textColor="@color/white"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="4dp" />
+
+                <!-- EditText for Created At (disabled) -->
+                <EditText
+                    android:id="@+id/edit_text_created_at"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:textColorHint="@color/white"
+                    android:background="@drawable/edit_text_border"
+                    android:textColor="@color/white"
+                    android:inputType="text"
+                    android:padding="8dp"
+                    android:enabled="false"
+                    android:focusable="false"
+                    android:layout_marginBottom="8dp" />
+
+                <!-- Label for Updated At -->
+                <TextView
+                    android:id="@+id/label_updated_at"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/updatedAt"
+                    android:textColor="@color/white"
+                    android:layout_marginBottom="4dp" />
+
+                <!-- EditText for Updated At (disabled) -->
+                <EditText
+                    android:id="@+id/edit_text_updated_at"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:textColorHint="@color/white"
+                    android:background="@drawable/edit_text_border"
+                    android:textColor="@color/white"
+                    android:inputType="text"
+                    android:padding="8dp"
+                    android:enabled="false"
+                    android:focusable="false"
+                    android:layout_marginBottom="8dp" />
+
+                <!-- General Feedback TextView -->
+                <TextView
+                    android:id="@+id/general_feedback_text_update_user"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/holo_red_dark"
+                    android:visibility="gone"
+                    android:text="@string/general_feedback"
+                    android:gravity="center"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="16dp" />
+
+            </LinearLayout>
+        </ScrollView>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    <!-- NavigationView for Drawer -->
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/navigation_view_user_details"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        android:background="@drawable/nav_view_border"
+        app:itemTextColor="@color/white"
+        app:itemIconTint="@color/white"
+        app:headerLayout="@layout/nav_header"
+        app:menu="@menu/nav_menu" />
+
+</androidx.drawerlayout.widget.DrawerLayout>

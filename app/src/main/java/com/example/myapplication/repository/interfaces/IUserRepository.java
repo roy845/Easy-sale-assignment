@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData;
 import androidx.paging.PagingData;
 import com.example.myapplication.models.User;
 import com.example.myapplication.models.UserCountPerMonth;
-
 import java.util.List;
 
 public interface IUserRepository {
