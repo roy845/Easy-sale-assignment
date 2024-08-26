@@ -288,9 +288,9 @@ public class GraphsActivity extends AppCompatActivity implements NavigationView.
         } else if (id == R.id.nav_add_new_user) {
             startActivity(new Intent(GraphsActivity.this, AddUserActivity.class));
         } else if (id == R.id.nav_graphs) {
-            if (!currentActivity.equals(AddUserActivity.class.getSimpleName())) {
-                Intent addUserIntent = new Intent(this, MainActivity.class);
-                startActivity(addUserIntent);
+            if (!currentActivity.equals(GraphsActivity.class.getSimpleName())) {
+                Intent graphsIntent = new Intent(this, GraphsActivity.class);
+                startActivity(graphsIntent);
                 finish();
             }
         } else {
